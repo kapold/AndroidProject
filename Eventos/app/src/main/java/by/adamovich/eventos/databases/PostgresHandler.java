@@ -7,6 +7,11 @@ import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import by.adamovich.eventos.models.User;
@@ -15,7 +20,7 @@ public class PostgresHandler {
     private final String user = "root";
     private final String pass = "password";
     private String url = "jdbc:postgresql://8.210.33.51/eventos";
-    public Connection connection;
+    private Connection connection;
     private boolean status;
 
     public PostgresHandler(Context context)
@@ -26,10 +31,6 @@ public class PostgresHandler {
         StrictMode.setThreadPolicy(policy);
 
         connect();
-        if (status)
-            Toast.makeText(context, "Подключение к бд УСПЕШНО", Toast.LENGTH_SHORT).show();
-        else
-            Toast.makeText(context, "Подключение к бд НЕ УСПЕШНО", Toast.LENGTH_SHORT).show();
     }
 
     private void connect() {
@@ -57,8 +58,57 @@ public class PostgresHandler {
     }
 
     public List<User> getUsers(){
+        String sql = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
 
+            while(rs.next()){
+                users.add(new User(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6)));
+            }
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ПОЛЬЗОВАТЕЛЕЙ: ", e.getMessage());
+        }
+        return users;
+    }
 
-        return null;
+    public User getUser(String nickname, String password){
+        String sql = String.format("SELECT * FROM users WHERE nickname = '%s' AND password = '%s'", nickname, password);
+        User user = null;
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                user = new User(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6));
+            }
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
+        return user;
+    }
+
+    public void addUser(User user){
+        String sql = String.format("INSERT INTO users(nickname, name, surname, password, phoneNumber) \n" +
+                " VALUES ('%s', '%s', '%s', '%s', '%s')", user.getNickname(), user.getName(), user.getSurname(), user.getPassword(), user.getPhoneNumber());
+        try{
+            Statement st = connection.createStatement();
+            st.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
     }
 }

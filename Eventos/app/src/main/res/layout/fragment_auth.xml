@@ -7,7 +7,7 @@
     tools:context=".fragments.AuthFragment">
 
     <Button
-        android:id="@+id/regBtn"
+        android:id="@+id/regBtnFromAuth"
         style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:id="@+id/notRegTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="234dp"
+        android:layout_marginTop="200dp"
         android:text="Еще не зарегистрированы?"
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,6 +44,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordTIL"
+        app:errorEnabled="true"
         style="?attr/textInputOutlinedStyle"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
@@ -64,6 +65,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nicknameTIL"
+        app:errorEnabled="true"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
