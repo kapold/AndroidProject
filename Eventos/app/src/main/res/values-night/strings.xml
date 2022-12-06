@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="registration">Зарегистрироваться</string>
+    <string name="notRegistred">Еще не зарегистрированы?</string>
+    <string name="enter">Войти</string>
+    <string name="passwordHint">Пароль</string>
+</resources>

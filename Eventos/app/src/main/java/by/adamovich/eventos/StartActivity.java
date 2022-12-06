@@ -21,7 +21,7 @@ public class StartActivity extends AppCompatActivity {
         loadDatabase();
     }
     public PostgresHandler psHandler;
-    public boolean fragmentSelection = true;
+    public boolean fragmentSelection = false;
 
     private void loadDatabase(){
         Executors.newSingleThreadExecutor().execute(() -> psHandler = new PostgresHandler(getApplicationContext()));
