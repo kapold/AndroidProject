@@ -23,7 +23,7 @@ public class PostgresHandler {
     private Connection connection;
     private boolean status;
 
-    public PostgresHandler(Context context)
+    public PostgresHandler()
     {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll()

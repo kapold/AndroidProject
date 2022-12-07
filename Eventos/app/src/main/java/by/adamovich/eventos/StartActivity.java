@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import java.sql.DriverManager;
 import java.util.concurrent.Executors;
 
 import by.adamovich.eventos.databases.PostgresHandler;
@@ -18,14 +22,18 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        loadDatabase();
+        psHandler = new PostgresHandler();
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().hide();
     }
     public PostgresHandler psHandler;
     public boolean fragmentSelection = false;
 
-    private void loadDatabase(){
-        Executors.newSingleThreadExecutor().execute(() -> psHandler = new PostgresHandler(getApplicationContext()));
-    }
+//    TODO: thread for DB connection
+//    private void loadDatabase(){
+//        Executors.newSingleThreadExecutor().execute(() -> psHandler = new PostgresHandler());
+//    }
 
     public void swapFragments(View view){
         changeFragments();
@@ -36,13 +44,13 @@ public class StartActivity extends AppCompatActivity {
         if (fragmentSelection){
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new AuthFragment()).commit();
+                    .replace(R.id.fragmentContainerView_StartActivity, new AuthFragment()).commit();
             fragmentSelection = false;
         }
         else{
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new RegisterFragment()).commit();
+                    .replace(R.id.fragmentContainerView_StartActivity, new RegisterFragment()).commit();
             fragmentSelection = true;
         }
     }
