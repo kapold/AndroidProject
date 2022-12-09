@@ -14,6 +14,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Type;
 import by.adamovich.eventos.models.User;
 
 public class PostgresHandler {
@@ -100,6 +102,38 @@ public class PostgresHandler {
         return user;
     }
 
+    public List<Type> getTypes(){
+        String sql = "SELECT * FROM types";
+        List<Type> types = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                types.add(new Type(rs.getInt(1), rs.getString(2)));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ТИПОВ: ", e.getMessage());
+        }
+        return types;
+    }
+
+    public List<String> getStringTypes(){
+        String sql = "SELECT type FROM types";
+        List<String> types = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                types.add(rs.getString(1));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ТИПОВ: ", e.getMessage());
+        }
+        return types;
+    }
+
     public void addUser(User user){
         String sql = String.format("INSERT INTO users(nickname, name, surname, password, phoneNumber) \n" +
                 " VALUES ('%s', '%s', '%s', '%s', '%s')", user.getNickname(), user.getName(), user.getSurname(), user.getPassword(), user.getPhoneNumber());
@@ -110,5 +144,38 @@ public class PostgresHandler {
         catch (SQLException e) {
             Log.d("ОШИБКА РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
         }
+    }
+
+    public void addEvent(Event event){
+        String sql = String.format("INSERT INTO events (idCreator, name, idType, imageUrl, place, time, date, capacity)\n" +
+                " VALUES (%d, '%s', %d, '%s', '%s', '%s', '%s', %d)",
+                event.getIdCreator(), event.getName(), event.getIdType(), event.getImageUrl(),
+                event.getPlace(), event.getTime(), event.getDate(), event.getCapacity());
+
+        try{
+            Statement st = connection.createStatement();
+            st.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДОБАВЛЕНЯ СОБЫТИЯ: ", e.getMessage());
+        }
+    }
+
+    public List<Event> getEvents(){
+        String sql = "SELECT * FROM events";
+        List<Event> events = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                events.add(new Event(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+                        rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),
+                        rs.getInt(9), rs.getInt(10)));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА СОБЫТИЙ: ", e.getMessage());
+        }
+        return events;
     }
 }

@@ -8,6 +8,12 @@
         android:checkable="true"
         android:enabled="true"/>
     <item
+        android:id="@+id/checkRequestsItem"
+        android:icon="@drawable/ic_baseline_announcement_24"
+        android:title="Запросы"
+        android:checkable="true"
+        android:enabled="true"/>
+    <item
         android:id="@+id/exitItem"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="Выйти"

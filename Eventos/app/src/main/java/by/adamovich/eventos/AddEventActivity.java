@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -18,6 +21,12 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
 import java.util.Calendar;
+import java.util.List;
+
+import by.adamovich.eventos.databases.PostgresHandler;
+import by.adamovich.eventos.models.DataManager;
+import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Type;
 
 
 public class AddEventActivity extends AppCompatActivity {
@@ -25,8 +34,11 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+        psHandler = new PostgresHandler();
 
         setTitle("New Event");
+        eventTime = "";
+        eventDate = "";
         imageView = findViewById(R.id.eventImage);
         titleTIL = findViewById(R.id.titleTIL);
         eventTypeTIL = findViewById(R.id.eventTypeTIL);
@@ -54,7 +66,7 @@ public class AddEventActivity extends AppCompatActivity {
         MaterialTimePicker.Builder materialTimeBuilder = new MaterialTimePicker.Builder();
         materialTimeBuilder
                 .setTitleText("Выбериет время")
-                .setTimeFormat(TimeFormat.CLOCK_12H)
+                .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setHour(12)
                 .setMinute(10);
         final MaterialTimePicker materialTimePicker = materialTimeBuilder.build();
@@ -62,31 +74,37 @@ public class AddEventActivity extends AppCompatActivity {
             materialTimePicker.show(getSupportFragmentManager(), "MATERIAL_TIME_PICKER");
         });
         materialTimePicker.addOnPositiveButtonClickListener(selection -> {
-           eventTime = String.format("%s, %s", materialTimePicker.getHour(), materialTimePicker.getMinute());
+           eventTime = String.format("%s:%s", materialTimePicker.getHour(), materialTimePicker.getMinute());
            isTimeSelected = true;
         });
 
         // Image picker
         imageView.setOnClickListener(v -> imageChooser());
+
+        autoCompleteTextView = findViewById(R.id.eventTypeText);
+        List<String> typesForAdapter = psHandler.getStringTypes();
+        autoCompleteTextView.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, typesForAdapter));
     }
     TextInputLayout titleTIL, eventTypeTIL, peopleCountTIL, placeTIL;
     boolean isDateSelected, isTimeSelected;
     String eventDate, eventTime;
     Button pickDateButton, pickTimeButton;
     ImageView imageView;
-    int SELECT_PICTURE = 200;
+    AutoCompleteTextView autoCompleteTextView;
+    PostgresHandler psHandler;
 
     private void imageChooser(){
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
+        startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+            if (requestCode == 200) {
                 Uri selectedImageUri = data.getData();
                 if (null != selectedImageUri)
                     imageView.setImageURI(selectedImageUri);
@@ -94,8 +112,17 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
+    private int getIdType(String typeName){
+        List<Type> types = psHandler.getTypes();
+        int id = 0;
+        for (Type t: types)
+            if (t.getType().equals(typeName))
+                id = t.getIdType();
+        return id;
+    }
+
     // TODO: start using CLOUDINARY to store images
-    private void addEventBtn(){
+    public void addEventBtn(View view){
         if (!isDateSelected){
             Toast.makeText(this, "Выберите дату", Toast.LENGTH_SHORT).show();
             return;
@@ -104,5 +131,47 @@ public class AddEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Выберите время", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        String title = titleTIL.getEditText().getText().toString(),
+               eventType = eventTypeTIL.getEditText().getText().toString(),
+               peopleCount = peopleCountTIL.getEditText().getText().toString(),
+               place = placeTIL.getEditText().getText().toString();
+        if (title.equals("") || eventType.equals("") || peopleCount.equals("") ||
+                place.equals("")){
+            if (title.equals(""))
+                titleTIL.setError("Заполните поле!");
+            else
+                titleTIL.setError(null);
+
+            if (eventType.equals(""))
+                eventTypeTIL.setError("Заполните поле!");
+            else
+                eventTypeTIL.setError(null);
+
+            if (peopleCount.equals(""))
+                peopleCountTIL.setError("Заполните поле!");
+            else
+                peopleCountTIL.setError(null);
+
+            if (place.equals(""))
+                placeTIL.setError("Заполните поле!");
+            else
+                placeTIL.setError(null);
+
+            return;
+        }
+        else{
+            titleTIL.setError(null);
+            eventTypeTIL.setError(null);
+            peopleCountTIL.setError(null);
+            placeTIL.setError(null);
+        }
+
+        Event event = new Event(DataManager.user.getID(), title, getIdType(eventType), place,
+                eventTime, eventDate, Integer.parseInt(peopleCount), "IMG NET");
+        psHandler.addEvent(event);
+
+        Toast.makeText(this, "Событие добавлено!", Toast.LENGTH_SHORT).show();
+        finish();
     }
 }

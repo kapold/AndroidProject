@@ -124,5 +124,6 @@ public class AuthFragment extends Fragment {
         Intent mainIntent = new Intent(context, MainActivity.class);
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(mainIntent);
+        startActivity.finishStartActivity();
     }
 }

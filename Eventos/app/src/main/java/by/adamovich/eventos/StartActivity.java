@@ -22,10 +22,6 @@ public class StartActivity extends AppCompatActivity {
     public PostgresHandler psHandler;
     public boolean fragmentSelection = false;
 
-//    private void loadDB(){
-//        Executors.newSingleThreadExecutor().execute(() -> psHandler = new PostgresHandler());
-//    }
-
     public void swapFragments(View view){
         changeFragments();
     }
@@ -45,4 +41,6 @@ public class StartActivity extends AppCompatActivity {
             fragmentSelection = true;
         }
     }
+
+    public void finishStartActivity() { finish(); }
 }

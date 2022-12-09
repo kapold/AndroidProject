@@ -34,26 +34,26 @@ public class AllEventsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
     View view;
+    TextInputLayout searchTIL;
+    EditText searchET;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_all_events, container, false);
 
-
-        TextInputLayout til = view.findViewById(R.id.searchTIL);
-        EditText tiet = til.getEditText();
-        tiet.addTextChangedListener(new TextWatcher() {
+        searchTIL = view.findViewById(R.id.searchTIL);
+        searchET = searchTIL.getEditText();
+        searchET.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {}
 
             public void beforeTextChanged(CharSequence s, int start,
                                           int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(getContext(), "hello world", Toast.LENGTH_SHORT).show();
+
             }
         });
-
         return view;
     }
 }

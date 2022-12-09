@@ -8,6 +8,11 @@ public class Type {
         this.type = type;
     }
 
+    public Type(int idType, String type){
+        this.idType = idType;
+        this.type = type;
+    }
+
     public int getIdType() {
         return idType;
     }

@@ -8,17 +8,35 @@ public class Event {
     private String place;
     private String time;
     private String date;
+    private String imageUrl;
     private int capacity;
     private int occupied;
 
+    public Event() {}
+
     public Event(int idCreator, String name, int idType, String place,
-                 String time, String date, int capacity, int occupied){
+                 String time, String date, int capacity, String imageUrl){
         this.idCreator = idCreator;
         this.name = name;
         this.idType = idType;
         this.place = place;
         this.time = time;
         this.date = date;
+        this.capacity = capacity;
+        this.imageUrl = imageUrl;
+    }
+
+
+    public Event(int idEvent, int idCreator, String name, int idType, String place, String time,
+                 String date, String imageUrl, int capacity, int occupied) {
+        this.idEvent = idEvent;
+        this.idCreator = idCreator;
+        this.name = name;
+        this.idType = idType;
+        this.place = place;
+        this.time = time;
+        this.date = date;
+        this.imageUrl = imageUrl;
         this.capacity = capacity;
         this.occupied = occupied;
     }
@@ -57,5 +75,25 @@ public class Event {
 
     public String getTime() {
         return time;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "idEvent=" + idEvent +
+                ", idCreator=" + idCreator +
+                ", name='" + name + '\'' +
+                ", idType=" + idType +
+                ", place='" + place + '\'' +
+                ", time='" + time + '\'' +
+                ", date='" + date + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", capacity=" + capacity +
+                ", occupied=" + occupied +
+                '}';
     }
 }

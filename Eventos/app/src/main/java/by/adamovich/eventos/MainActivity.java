@@ -18,7 +18,6 @@ import by.adamovich.eventos.databases.PostgresHandler;
 import by.adamovich.eventos.models.DataManager;
 
 public class MainActivity extends AppCompatActivity   {
-
     public PostgresHandler psHandler;
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
@@ -42,10 +41,16 @@ public class MainActivity extends AppCompatActivity   {
                 case R.id.addEventItem:
                     Intent newEventIntent = new Intent(this, AddEventActivity.class);
                     startActivity(newEventIntent);
+                    drawerLayout.closeDrawers();
+                    break;
+                case R.id.checkRequestsItem:
+                    Toast.makeText(this, "Пака шо нет, ждем апдейт", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.exitItem:
-                    finish();
                     DataManager.user = null;
+                    Intent startActivity = new Intent(this, StartActivity.class);
+                    startActivity(startActivity);
+                    finish();
                     break;
             }
             return false;

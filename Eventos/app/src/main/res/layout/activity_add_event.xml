@@ -10,10 +10,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/addEventBtn"
+            android:layout_width="200dp"
+            android:onClick="addEventBtn"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="Добавить событие"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/placeTIL" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/placeTIL"
             style="?attr/textInputFilledStyle"
-            android:layout_width="360dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="Место проведения"
@@ -34,8 +45,8 @@
 
         <ImageView
             android:id="@+id/eventImage"
-            android:layout_width="300dp"
-            android:layout_height="230dp"
+            android:layout_width="280dp"
+            android:layout_height="200dp"
             android:layout_marginTop="32dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +58,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleTIL"
             style="?attr/textInputFilledStyle"
-            android:layout_width="360dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="Заголовок"
@@ -69,7 +80,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/eventTypeTIL"
             style="@style/Widget.Material3.TextInputLayout.FilledBox.ExposedDropdownMenu"
-            android:layout_width="360dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Тип события"
@@ -89,7 +100,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/peopleCountTIL"
             style="?attr/textInputFilledStyle"
-            android:layout_width="360dp"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:hint="Количество участников"
@@ -103,7 +114,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLength="6"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
