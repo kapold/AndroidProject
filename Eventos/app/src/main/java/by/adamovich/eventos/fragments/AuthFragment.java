@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,14 +53,14 @@ public class AuthFragment extends Fragment {
     TextView logInTV, notRegisteredTV;
     Button authBtn, regBtn;
     PostgresHandler psHandler;
-    StartActivity mainActivity;
+    StartActivity startActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_auth, container, false);
-        mainActivity = (StartActivity) getActivity();
-        psHandler = mainActivity.psHandler;
+        startActivity = (StartActivity) getActivity();
+        psHandler = startActivity.psHandler;
         // Шрифты
         Typeface robotoBlack = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Black.ttf");
         logInTV = view.findViewById(R.id.logInTV);

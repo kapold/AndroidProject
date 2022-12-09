@@ -1,8 +1,17 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/inbox_item"
-        android:title="Тест тайтл"
-        android:checkable="true"/>
+        android:id="@+id/addEventItem"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="Добавить событие"
+        android:checkable="true"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/exitItem"
+        android:icon="@drawable/ic_baseline_logout_24"
+        android:title="Выйти"
+        android:checkable="true"
+        android:enabled="true"/>
 
 </menu>

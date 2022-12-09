@@ -23,6 +23,9 @@
             android:name=".MainActivity"
             android:exported="true"/>
         <activity
+            android:name=".AddEventActivity"
+            android:exported="true"/>
+        <activity
             android:name=".StartActivity"
             android:exported="true">
             <intent-filter>

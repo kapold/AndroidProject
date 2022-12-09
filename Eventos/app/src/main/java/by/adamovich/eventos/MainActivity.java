@@ -1,21 +1,29 @@
 package by.adamovich.eventos;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.Objects;
 
 import by.adamovich.eventos.databases.PostgresHandler;
+import by.adamovich.eventos.models.DataManager;
 
-public class MainActivity extends AppCompatActivity {
-    @SuppressLint("MissingInflatedId")
+public class MainActivity extends AppCompatActivity   {
+
+    public PostgresHandler psHandler;
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
+    NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,14 +34,23 @@ public class MainActivity extends AppCompatActivity {
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        searchTIL = findViewById(R.id.searchTIL);
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.addEventItem:
+                    Intent newEventIntent = new Intent(this, AddEventActivity.class);
+                    startActivity(newEventIntent);
+                    break;
+                case R.id.exitItem:
+                    finish();
+                    DataManager.user = null;
+                    break;
+            }
+            return false;
+        });
     }
-    public PostgresHandler psHandler;
-    public DrawerLayout drawerLayout;
-    public ActionBarDrawerToggle actionBarDrawerToggle;
-    TextInputLayout searchTIL;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -41,8 +58,4 @@ public class MainActivity extends AppCompatActivity {
             return true;
         return super.onOptionsItemSelected(item);
     }
-
-//    private void loadDatabase(){
-//        Executors.newSingleThreadExecutor().execute(() -> psHandler = new PostgresHandler());
-//    }
 }

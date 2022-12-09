@@ -8,24 +8,32 @@
     tools:context=".MainActivity"
     android:id="@+id/main_drawer_layout">
 
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView_MainActivity"
+            android:name="by.adamovich.eventos.fragments.AllEventsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout="@layout/fragment_all_events" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <com.google.android.material.navigation.NavigationView
+        android:paddingTop="100dp"
         app:headerLayout="@layout/header_navigation_drawer"
-        android:id="@+id/navigationMenu"
+        android:id="@+id/navigationView"
         app:menu="@menu/navigation_drawer"
         android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView_MainActivity"
-        android:name="by.adamovich.eventos.fragments.AllEventsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout="@layout/fragment_all_events" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

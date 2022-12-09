@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Eventos</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="register">Регистрация</string>
     <string name="registration">Зарегистрироваться</string>
     <string name="notRegistred">Еще не зарегистрированы?</string>
@@ -9,6 +8,4 @@
     <string name="nicknameHint">Никнейм</string>
     <string name="nav_open">Open</string>
     <string name="nav_close">Close</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

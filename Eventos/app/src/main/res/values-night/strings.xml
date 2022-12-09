@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Eventos</string>
+    <string name="register">Регистрация</string>
     <string name="registration">Зарегистрироваться</string>
     <string name="notRegistred">Еще не зарегистрированы?</string>
     <string name="enter">Войти</string>
     <string name="passwordHint">Пароль</string>
+    <string name="nicknameHint">Никнейм</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
 </resources>
