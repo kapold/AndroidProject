@@ -25,24 +25,52 @@ public class User {
         this.password = password;
     }
 
-    public int getID() { return idUser; }
-
-    public String getName() { return name; }
-
-    public String getSurname() { return surname; }
-
-    public String getPhoneNumber() { return phoneNumber; }
-
-    public String getPassword() {
-        return password;
+    public int getIdUser() {
+        return idUser;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-    public void setPassword(String password){
+    public String getName() {
+        return name;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override

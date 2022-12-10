@@ -22,6 +22,7 @@ import by.adamovich.eventos.StartActivity;
 import by.adamovich.eventos.R;
 import by.adamovich.eventos.databases.Cypher;
 import by.adamovich.eventos.databases.PostgresHandler;
+import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.User;
 
 public class RegisterFragment extends Fragment {
@@ -48,14 +49,12 @@ public class RegisterFragment extends Fragment {
     public View view;
     TextView registerTV, alreadyRegisteredTV;
     Button regBtn, authBtn;
-    PostgresHandler psHandler;
     StartActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_register, container, false);
         mainActivity = (StartActivity) getActivity();
-        psHandler = mainActivity.psHandler;
         // Шрифты
         Typeface robotoBlack = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Black.ttf");
         registerTV = view.findViewById(R.id.registerTV);
@@ -123,7 +122,7 @@ public class RegisterFragment extends Fragment {
         // Хэширование
         password = Cypher.getMD5(password);
         User user = new User(nickname, name, surname, password, phone);
-        List<User> allUsers = psHandler.getUsers();
+        List<User> allUsers = DataManager.psHandler.getUsers();
         for (User u: allUsers) {
             if (u.getNickname().equals(user.getNickname())){
                 Toast.makeText(context, "Пользователь с таким ником уже существует.\n" +
@@ -131,7 +130,7 @@ public class RegisterFragment extends Fragment {
                 return;
             }
         }
-        psHandler.addUser(user);
+        DataManager.psHandler.addUser(user);
         authBtn.performClick();
         Toast.makeText(context, "Регистрация прошла успешно!", Toast.LENGTH_SHORT).show();
     }

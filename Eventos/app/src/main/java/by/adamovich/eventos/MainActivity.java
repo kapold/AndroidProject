@@ -18,7 +18,6 @@ import by.adamovich.eventos.databases.PostgresHandler;
 import by.adamovich.eventos.models.DataManager;
 
 public class MainActivity extends AppCompatActivity   {
-    public PostgresHandler psHandler;
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
@@ -27,7 +26,6 @@ public class MainActivity extends AppCompatActivity   {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        psHandler = new PostgresHandler();
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);

@@ -8,18 +8,18 @@ import android.view.View;
 import by.adamovich.eventos.databases.PostgresHandler;
 import by.adamovich.eventos.fragments.AuthFragment;
 import by.adamovich.eventos.fragments.RegisterFragment;
+import by.adamovich.eventos.models.DataManager;
 
 public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        psHandler = new PostgresHandler();
+        DataManager.loadDatabase();
 
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
     }
-    public PostgresHandler psHandler;
     public boolean fragmentSelection = false;
 
     public void swapFragments(View view){

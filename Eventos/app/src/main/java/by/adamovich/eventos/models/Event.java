@@ -45,40 +45,80 @@ public class Event {
         return idEvent;
     }
 
+    public void setIdEvent(int idEvent) {
+        this.idEvent = idEvent;
+    }
+
     public int getIdCreator() {
         return idCreator;
+    }
+
+    public void setIdCreator(int idCreator) {
+        this.idCreator = idCreator;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getIdType() {
         return idType;
     }
 
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public int getOccupied() {
-        return occupied;
-    }
-
-    public String getDate() {
-        return date;
+    public void setIdType(int idType) {
+        this.idType = idType;
     }
 
     public String getPlace() {
         return place;
     }
 
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
     public String getTime() {
         return time;
     }
 
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getOccupied() {
+        return occupied;
+    }
+
+    public void setOccupied(int occupied) {
+        this.occupied = occupied;
     }
 
     @Override

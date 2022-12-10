@@ -52,7 +52,6 @@ public class AuthFragment extends Fragment {
     private View view;
     TextView logInTV, notRegisteredTV;
     Button authBtn, regBtn;
-    PostgresHandler psHandler;
     StartActivity startActivity;
 
     @Override
@@ -60,7 +59,6 @@ public class AuthFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_auth, container, false);
         startActivity = (StartActivity) getActivity();
-        psHandler = startActivity.psHandler;
         // Шрифты
         Typeface robotoBlack = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Black.ttf");
         logInTV = view.findViewById(R.id.logInTV);
@@ -102,7 +100,7 @@ public class AuthFragment extends Fragment {
             passwordTIL.setError(null);
         }
 
-        List<User> allUsers = psHandler.getUsers();
+        List<User> allUsers = DataManager.psHandler.getUsers();
         boolean isExists = false;
         for (User u: allUsers)
             if (u.getNickname().equals(nickname))
@@ -114,7 +112,7 @@ public class AuthFragment extends Fragment {
         }
 
         password = Cypher.getMD5(password);
-        User user = psHandler.getUser(nickname, password);
+        User user = DataManager.psHandler.getUser(nickname, password);
         if (user == null){
             Toast.makeText(context, "Пароль неверный!", Toast.LENGTH_SHORT).show();
             return;

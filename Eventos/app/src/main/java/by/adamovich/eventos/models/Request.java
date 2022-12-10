@@ -14,15 +14,43 @@ public class Request {
         this.isAccepted = isAccepted;
     }
 
-    public int getIdEvent() {
-        return idEvent;
-    }
-
     public int getIdRequest() {
         return idRequest;
     }
 
+    public void setIdRequest(int idRequest) {
+        this.idRequest = idRequest;
+    }
+
     public int getIdSender() {
         return idSender;
+    }
+
+    public void setIdSender(int idSender) {
+        this.idSender = idSender;
+    }
+
+    public int getIdEvent() {
+        return idEvent;
+    }
+
+    public void setIdEvent(int idEvent) {
+        this.idEvent = idEvent;
+    }
+
+    public boolean isStandby() {
+        return isStandby;
+    }
+
+    public void setStandby(boolean standby) {
+        isStandby = standby;
+    }
+
+    public boolean isAccepted() {
+        return isAccepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        isAccepted = accepted;
     }
 }

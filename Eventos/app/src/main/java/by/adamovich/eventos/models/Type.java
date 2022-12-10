@@ -20,4 +20,12 @@ public class Type {
     public String getType() {
         return type;
     }
+
+    public void setIdType(int idType) {
+        this.idType = idType;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

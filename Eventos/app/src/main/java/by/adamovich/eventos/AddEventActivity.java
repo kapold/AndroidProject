@@ -1,10 +1,8 @@
 package by.adamovich.eventos;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -15,15 +13,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 
-import java.util.Calendar;
 import java.util.List;
 
-import by.adamovich.eventos.databases.PostgresHandler;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Type;
@@ -34,7 +29,6 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
-        psHandler = new PostgresHandler();
 
         setTitle("New Event");
         eventTime = "";
@@ -82,7 +76,7 @@ public class AddEventActivity extends AppCompatActivity {
         imageView.setOnClickListener(v -> imageChooser());
 
         autoCompleteTextView = findViewById(R.id.eventTypeText);
-        List<String> typesForAdapter = psHandler.getStringTypes();
+        List<String> typesForAdapter = DataManager.psHandler.getStringTypes();
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, typesForAdapter));
     }
@@ -92,7 +86,6 @@ public class AddEventActivity extends AppCompatActivity {
     Button pickDateButton, pickTimeButton;
     ImageView imageView;
     AutoCompleteTextView autoCompleteTextView;
-    PostgresHandler psHandler;
 
     private void imageChooser(){
         Intent i = new Intent();
@@ -113,7 +106,7 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private int getIdType(String typeName){
-        List<Type> types = psHandler.getTypes();
+        List<Type> types = DataManager.psHandler.getTypes();
         int id = 0;
         for (Type t: types)
             if (t.getType().equals(typeName))
@@ -167,9 +160,9 @@ public class AddEventActivity extends AppCompatActivity {
             placeTIL.setError(null);
         }
 
-        Event event = new Event(DataManager.user.getID(), title, getIdType(eventType), place,
+        Event event = new Event(DataManager.user.getIdUser(), title, getIdType(eventType), place,
                 eventTime, eventDate, Integer.parseInt(peopleCount), "IMG NET");
-        psHandler.addEvent(event);
+        DataManager.psHandler.addEvent(event);
 
         Toast.makeText(this, "Событие добавлено!", Toast.LENGTH_SHORT).show();
         finish();

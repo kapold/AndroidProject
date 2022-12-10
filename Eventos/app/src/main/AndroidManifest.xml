@@ -38,10 +38,6 @@
                 android:value="" />
         </activity>
 
-        <service
-            android:name=".databases.DbService"
-            android:enabled="true"
-            android:exported="false" />
     </application>
 
 </manifest>
