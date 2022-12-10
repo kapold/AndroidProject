@@ -8,14 +8,14 @@ public class Event {
     private String place;
     private String time;
     private String date;
-    private String imageUrl;
+    private byte[] image;
     private int capacity;
     private int occupied;
 
     public Event() {}
 
     public Event(int idCreator, String name, int idType, String place,
-                 String time, String date, int capacity, String imageUrl){
+                 String time, String date, int capacity, byte[] image){
         this.idCreator = idCreator;
         this.name = name;
         this.idType = idType;
@@ -23,12 +23,24 @@ public class Event {
         this.time = time;
         this.date = date;
         this.capacity = capacity;
-        this.imageUrl = imageUrl;
+        this.image = image;
+    }
+
+    public Event(int idCreator, String name, int idType, String place,
+                 String time, String date, int capacity){
+        this.idCreator = idCreator;
+        this.name = name;
+        this.idType = idType;
+        this.place = place;
+        this.time = time;
+        this.date = date;
+        this.capacity = capacity;
+        this.image = image;
     }
 
 
     public Event(int idEvent, int idCreator, String name, int idType, String place, String time,
-                 String date, String imageUrl, int capacity, int occupied) {
+                 String date, byte[] image, int capacity, int occupied) {
         this.idEvent = idEvent;
         this.idCreator = idCreator;
         this.name = name;
@@ -36,7 +48,7 @@ public class Event {
         this.place = place;
         this.time = time;
         this.date = date;
-        this.imageUrl = imageUrl;
+        this.image = image;
         this.capacity = capacity;
         this.occupied = occupied;
     }
@@ -97,12 +109,12 @@ public class Event {
         this.date = date;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public int getCapacity() {
@@ -131,7 +143,7 @@ public class Event {
                 ", place='" + place + '\'' +
                 ", time='" + time + '\'' +
                 ", date='" + date + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
+                ", imageUrl='" + image + '\'' +
                 ", capacity=" + capacity +
                 ", occupied=" + occupied +
                 '}';

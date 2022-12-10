@@ -146,15 +146,19 @@ public class PostgresHandler {
         }
     }
 
-    public void addEvent(Event event){
-        String sql = String.format("INSERT INTO events (idCreator, name, idType, imageUrl, place, time, date, capacity)\n" +
-                " VALUES (%d, '%s', %d, '%s', '%s', '%s', '%s', %d)",
-                event.getIdCreator(), event.getName(), event.getIdType(), event.getImageUrl(),
-                event.getPlace(), event.getTime(), event.getDate(), event.getCapacity());
-
+    public void addEvent(Event event, byte[] image){
         try{
-            Statement st = connection.createStatement();
-            st.executeUpdate(sql);
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO events (idCreator, name, idType, image, place, time, date, capacity)\n" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, event.getIdCreator());
+            ps.setString(2, event.getName());
+            ps.setInt(3, event.getIdType());
+            ps.setBytes(4, image);
+            ps.setString(5, event.getPlace());
+            ps.setString(6, event.getTime());
+            ps.setString(7, event.getDate());
+            ps.setInt(8, event.getCapacity());
+            ps.executeUpdate();
         }
         catch (SQLException e) {
             Log.d("ОШИБКА ДОБАВЛЕНЯ СОБЫТИЯ: ", e.getMessage());
@@ -170,7 +174,7 @@ public class PostgresHandler {
 
             while(rs.next())
                 events.add(new Event(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-                        rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),
+                        rs.getString(5), rs.getString(6), rs.getString(7), rs.getBytes(8),
                         rs.getInt(9), rs.getInt(10)));
         }
         catch (SQLException e) {
