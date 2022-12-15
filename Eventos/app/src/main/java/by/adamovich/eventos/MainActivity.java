@@ -2,6 +2,7 @@ package by.adamovich.eventos;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -23,6 +24,7 @@ import java.util.concurrent.Executors;
 
 import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.databases.PostgresHandler;
+import by.adamovich.eventos.databases.SQLiteHandler;
 import by.adamovich.eventos.databases.SharedPreferencesHelper;
 import by.adamovich.eventos.databases.XmlSerialization;
 import by.adamovich.eventos.models.DataManager;
@@ -44,15 +46,19 @@ public class MainActivity extends AppCompatActivity   {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Drawer creation
         drawerLayout = findViewById(R.id.main_drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
+        // Serialization
         JsonSerialization jsonSerialization = new JsonSerialization("userInfo.json");
         XmlSerialization xmlSerialization = new XmlSerialization("userInfo.xml");
         SharedPreferencesHelper spHelper = new SharedPreferencesHelper(this);
+
+        // Drawer menu
         navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){

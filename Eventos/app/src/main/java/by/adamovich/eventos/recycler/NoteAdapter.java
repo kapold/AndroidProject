@@ -12,36 +12,36 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import by.adamovich.eventos.R;
-import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Note;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
+public class NoteAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private final LayoutInflater inflater;
-    private final List<Event> events;
+    private final List<Note> notes;
 
-    public EventAdapter(Context context, List<Event> events) {
-        this.events = events;
+    public NoteAdapter(Context context, List<Note> notes) {
+        this.notes = notes;
         this.inflater = LayoutInflater.from(context);
     }
 
-    // возвращает объект ViewHolder, который будет хранить данные по одному объекту Event.
+    // возвращает объект ViewHolder, который будет хранить данные по одному объекту Note.
     @Override
     public EventAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.event_item, parent, false);
-        return new ViewHolder(view);
+        View view = inflater.inflate(R.layout.note_item, parent, false);
+        return new EventAdapter.ViewHolder(view);
     }
 
     // выполняет привязку объекта ViewHolder к объекту Event по определенной позиции.
     @Override
     public void onBindViewHolder(EventAdapter.ViewHolder holder, int position) {
-        Event event = events.get(position);
+        Note note = notes.get(position);
         // holder.[something] для установки контента
-        holder.titleView.setText(event.getName());
+        holder.titleView.setText(note.getTitle());
     }
 
     // возвращает количество объектов в списке.
     @Override
     public int getItemCount() {
-        return events.size();
+        return notes.size();
     }
 
     // определение переменных
