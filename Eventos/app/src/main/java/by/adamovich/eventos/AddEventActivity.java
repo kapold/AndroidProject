@@ -187,7 +187,7 @@ public class AddEventActivity extends AppCompatActivity {
     private void imageChooser(){
         Intent i = new Intent();
         i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
+        i.setAction(Intent.ACTION_PICK);
         startActivityForResult(Intent.createChooser(i, "Select Picture"), 200);
     }
 

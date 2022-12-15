@@ -14,6 +14,24 @@
         android:checkable="true"
         android:enabled="true"/>
     <item
+        android:id="@+id/notesItem"
+        android:icon="@drawable/ic_baseline_sticky_note_24"
+        android:title="Заметки"
+        android:checkable="true"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/saveInfoItem"
+        android:icon="@drawable/ic_baseline_save_24"
+        android:title="Сохранить данные пользователя"
+        android:checkable="true"
+        android:enabled="true"/>
+    <item
+        android:id="@+id/loadInfoItem"
+        android:icon="@drawable/ic_baseline_upload_file_24"
+        android:title="Показать данные пользователя"
+        android:checkable="true"
+        android:enabled="true"/>
+    <item
         android:id="@+id/exitItem"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="Выйти"
