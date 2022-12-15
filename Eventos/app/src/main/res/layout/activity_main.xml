@@ -19,7 +19,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchTIL"
-                android:layout_width="300dp"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
