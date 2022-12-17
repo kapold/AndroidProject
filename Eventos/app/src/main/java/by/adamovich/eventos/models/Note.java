@@ -56,4 +56,9 @@ public class Note {
     public void setDate(String date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s\n%s\n%s\n", title, text, date);
+    }
 }

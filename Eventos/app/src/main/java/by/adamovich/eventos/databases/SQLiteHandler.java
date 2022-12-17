@@ -57,10 +57,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put("CREATOR_COL", note.getCreator());
-            values.put("TITLE_COL", note.getTitle());
-            values.put("TEXT_COL", note.getText());
-            values.put("DATE_COL", note.getDate());
+            values.put("creator", note.getCreator());
+            values.put("title", note.getTitle());
+            values.put("noteText", note.getText());
+            values.put("lastDateEdit", note.getDate());
 
             db.insert(TABLE_NAME_NOTES, null, values);
             db.close();
@@ -99,6 +99,28 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         return notesList;
     }
 
+    public Note getNote(int id){
+        try{
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            Cursor cursorNotes = db.rawQuery("SELECT * FROM " + TABLE_NAME_NOTES + " WHERE idNote=?", new String[] {String.valueOf(id)});
+
+            cursorNotes.moveToFirst();
+            Note note = new Note(cursorNotes.getInt(0),
+                    cursorNotes.getInt(1),
+                    cursorNotes.getString(2),
+                    cursorNotes.getString(3),
+                    cursorNotes.getString(4));
+            cursorNotes.close();
+
+            return note;
+        }
+        catch (Exception ex){
+            Log.d("getNotes(): ", ex.getMessage());
+        }
+        return null;
+    }
+
     public void deleteNote(int idNote) {
         try{
             SQLiteDatabase db = this.getWritableDatabase();
@@ -115,10 +137,10 @@ public class SQLiteHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
 
-            values.put("CREATOR_COL", note.getCreator());
-            values.put("TITLE_COL", note.getTitle());
-            values.put("TEXT_COL", note.getText());
-            values.put("DATE_COL", note.getDate());
+            values.put("creator", note.getCreator());
+            values.put("title", note.getTitle());
+            values.put("noteText", note.getText());
+            values.put("lastDateEdit", note.getDate());
 
             db.update(TABLE_NAME_NOTES, values, "idNote=?", new String[]{ String.valueOf(idNote) });
             db.close();

@@ -25,6 +25,12 @@
             android:name=".MainActivity"
             android:exported="true"/>
         <activity
+            android:name=".AddNoteActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".ChangeNoteActivity"
+            android:exported="true"/>
+        <activity
             android:name=".NotesActivity"
             android:exported="true"/>
         <activity
@@ -44,6 +50,11 @@
                 android:value="" />
         </activity>
 
+        <provider
+            android:authorities="by.adamovich.provider"
+            android:name=".databases.NotesProvider"
+            android:exported="true"
+            android:grantUriPermissions="true" />
     </application>
 
 </manifest>

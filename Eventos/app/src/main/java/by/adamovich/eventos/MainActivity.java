@@ -86,6 +86,11 @@ public class MainActivity extends AppCompatActivity   {
                     Toast.makeText(this, "User from Xml:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
                     spHelper.loadPreferences();
                     break;
+                case R.id.notesItem:
+                    Intent newNotesIntent = new Intent(this, NotesActivity.class);
+                    startActivity(newNotesIntent);
+                    drawerLayout.closeDrawers();
+                    break;
                 case R.id.exitItem:
                     DataManager.user = null;
                     Intent startActivity = new Intent(this, StartActivity.class);
