@@ -51,8 +51,9 @@
         </activity>
 
         <provider
-            android:authorities="by.adamovich.provider"
             android:name=".databases.NotesProvider"
+            android:authorities="by.adamovich.provider"
+            android:enabled="true"
             android:exported="true"
             android:grantUriPermissions="true" />
     </application>
