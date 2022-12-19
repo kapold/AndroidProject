@@ -1,6 +1,8 @@
 package by.adamovich.eventos.recycler;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -34,8 +38,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(EventAdapter.ViewHolder holder, int position) {
         Event event = events.get(position);
-        // holder.[something] для установки контента
+
         holder.titleView.setText(event.getName());
+
+        Bitmap bmp = BitmapFactory.decodeByteArray(event.getImage(), 0, event.getImage().length);
+        holder.eventImageView.setImageBitmap(bmp);
     }
 
     // возвращает количество объектов в списке.

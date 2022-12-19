@@ -9,6 +9,7 @@ import by.adamovich.eventos.fragments.RegisterFragment;
 
 public class StartActivity extends AppCompatActivity {
     public boolean fragmentSelection = false;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

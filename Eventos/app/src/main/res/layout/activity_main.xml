@@ -30,21 +30,54 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/searchTIET"
+                    android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:id="@+id/eventsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="100dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/searchTIL" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
+                android:layout_marginTop="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:shimmer_repeat_mode="restart"
+                app:shimmer_shape="radial"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchTIL">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                    <include layout="@layout/shimmer_layout" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

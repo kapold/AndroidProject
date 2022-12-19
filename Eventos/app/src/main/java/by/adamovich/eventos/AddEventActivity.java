@@ -29,6 +29,13 @@ import by.adamovich.eventos.models.Type;
 
 
 public class AddEventActivity extends AppCompatActivity {
+    TextInputLayout titleTIL, eventTypeTIL, peopleCountTIL, placeTIL;
+    boolean isDateSelected, isTimeSelected;
+    String eventDate, eventTime;
+    Button pickDateButton, pickTimeButton;
+    ImageView imageView;
+    AutoCompleteTextView autoCompleteTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,12 +98,6 @@ public class AddEventActivity extends AppCompatActivity {
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_dropdown_item_1line, typesForAdapter));
     }
-    TextInputLayout titleTIL, eventTypeTIL, peopleCountTIL, placeTIL;
-    boolean isDateSelected, isTimeSelected;
-    String eventDate, eventTime;
-    Button pickDateButton, pickTimeButton;
-    ImageView imageView;
-    AutoCompleteTextView autoCompleteTextView;
 
 //    private static final int PERMISSION_CODE = 1;
 //    private static final int PICK_IMAGE = 1;

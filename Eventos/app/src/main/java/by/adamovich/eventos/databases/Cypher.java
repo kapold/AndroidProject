@@ -19,13 +19,12 @@ public class Cypher {
 
             // Convert message digest into hex value
             String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
+            while (hashtext.length() < 32)
                 hashtext = "0" + hashtext;
-            }
             return hashtext;
         }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        catch (NoSuchAlgorithmException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }

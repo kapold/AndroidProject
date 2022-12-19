@@ -1,12 +1,15 @@
 package by.adamovich.eventos;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.os.Handler;
+import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,36 +18,53 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
 
 import by.adamovich.eventos.databases.JsonSerialization;
-import by.adamovich.eventos.databases.PostgresHandler;
-import by.adamovich.eventos.databases.SQLiteHandler;
 import by.adamovich.eventos.databases.SharedPreferencesHelper;
 import by.adamovich.eventos.databases.XmlSerialization;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.User;
 import by.adamovich.eventos.recycler.EventAdapter;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity   {
+public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
     ArrayList<Event> events = new ArrayList<>();
     RecyclerView eventRecycler;
+    ShimmerFrameLayout shimmerFrameLayout;
+    TextInputLayout searchTIL;
+    EditText searchET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Shimmer
+        shimmerFrameLayout = findViewById(R.id.shimmerLayout);
+        shimmerFrameLayout.startShimmer();
+
+        // Search
+        searchTIL = findViewById(R.id.searchTIL);
+        searchET = searchTIL.getEditText();
+        searchET.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+        });
 
         // Drawer creation
         drawerLayout = findViewById(R.id.main_drawer_layout);
@@ -102,10 +122,8 @@ public class MainActivity extends AppCompatActivity   {
         });
 
         // Recycler
-        setInitialData();
         eventRecycler = findViewById(R.id.eventsRecycler);
-        EventAdapter eventAdapter = new EventAdapter(this, events);
-        eventRecycler.setAdapter(eventAdapter);
+        reloadEventRecycler();
     }
 
     @Override
@@ -115,10 +133,26 @@ public class MainActivity extends AppCompatActivity   {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setInitialData(){
+    public void reloadEventRecycler(){
         try{
-            // TODO: Multithreading
-            //events = (ArrayList<Event>) DataManager.psHandler.getEvents();
+            new Thread(() -> {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> {
+                    searchET.setEnabled(false);
+                });
+
+                List<Event> resultList = DataManager.psHandler.getEvents();
+                EventAdapter eventAdapter = new EventAdapter(this, resultList);
+
+                handler.post(() -> {
+                    shimmerFrameLayout.hideShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
+                    eventRecycler.setVisibility(View.VISIBLE);
+                    searchET.setEnabled(true);
+
+                    eventRecycler.setAdapter(eventAdapter);
+                });
+            }).start();
         }
         catch (Exception ex){
             Toast.makeText(this, "Произошла ошибка загрузки списка событий", Toast.LENGTH_SHORT).show();
