@@ -1,11 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="300dp">
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventPeopleSM"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="#/#"
+        android:layout_marginTop="24dp"
+        android:textAlignment="textEnd"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventDateSM" />
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventCreatorSM"
+        android:layout_width="200dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="26dp"
+        android:text="Creator: "
+        android:textSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventTitleSM" />
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventDateSM"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Date"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/eventImageSM"
+        app:layout_constraintTop_toBottomOf="@+id/eventTimeSM" />
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventTimeSM"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Time"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/eventImageSM"
+        app:layout_constraintTop_toBottomOf="@+id/eventPlaceSM" />
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventPlaceSM"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Place"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/eventImageSM"
+        app:layout_constraintTop_toBottomOf="@+id/eventTypeSM" />
+
+    <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
+        android:id="@+id/eventTypeSM"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Type"
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/eventImageSM"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:background="#e6e6fa"
         android:id="@+id/eventImageSM"
         android:layout_width="200dp"
         android:layout_height="140dp"
@@ -13,18 +92,19 @@
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="#848482"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:background="#e6e6fa"
+        android:textColor="#e6e6fa"
         android:id="@+id/eventTitleSM"
-        android:layout_width="140dp"
+        android:layout_marginLeft="24dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:background="#848482"
         android:layout_marginTop="20dp"
+        android:text="Title"
         android:textSize="24dp"
-        app:layout_constraintStart_toEndOf="@+id/eventImageSM"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eventImageSM" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -29,25 +30,29 @@ import java.util.Objects;
 import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.databases.SharedPreferencesHelper;
 import by.adamovich.eventos.databases.XmlSerialization;
+import by.adamovich.eventos.databinding.ActivityMainBinding;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.User;
 import by.adamovich.eventos.recycler.EventAdapter;
+import kotlin.LateinitKt;
 
 public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     NavigationView navigationView;
-    ArrayList<Event> events = new ArrayList<>();
     RecyclerView eventRecycler;
     ShimmerFrameLayout shimmerFrameLayout;
     TextInputLayout searchTIL;
     EditText searchET;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
 
         // Shimmer
         shimmerFrameLayout = findViewById(R.id.shimmerLayout);
@@ -62,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                searchEvent(s);
             }
         });
 
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Данные сохранены", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.loadInfoItem:
-                    List<User> importList = new ArrayList<>();
+                    List<User> importList;
                     importList = jsonSerialization.importFromJSON(this);
                     Toast.makeText(this, "User from Json:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
                     importList = xmlSerialization.importXml(this);
@@ -133,6 +138,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        reloadEventRecycler();
+    }
+
     public void reloadEventRecycler(){
         try{
             new Thread(() -> {
@@ -157,6 +168,28 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception ex){
             Toast.makeText(this, "Произошла ошибка загрузки списка событий", Toast.LENGTH_SHORT).show();
             Log.d("setInitialData(): ", ex.getMessage());
+        }
+    }
+
+    public void searchEvent(CharSequence searchText){
+        try{
+            new Thread(() -> {
+                List<Event> eventsList = DataManager.psHandler.getEvents();
+                List<Event> resultList = new ArrayList<>();
+                for (Event e: eventsList)
+                    if (e.getName().contains(searchText))
+                        resultList.add(e);
+
+                EventAdapter eventAdapter = new EventAdapter(this, resultList);
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(() -> {
+                    eventRecycler.setAdapter(eventAdapter);
+                });
+            }).start();
+        }
+        catch (Exception ex){
+            Toast.makeText(this, "Произошла ошибка поиска", Toast.LENGTH_SHORT).show();
+            Log.d("searchEvent(): ", ex.getMessage());
         }
     }
 }

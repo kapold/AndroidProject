@@ -8,14 +8,14 @@ public class Event {
     private String place;
     private String time;
     private String date;
-    private byte[] image;
+    private String imageLink;
     private int capacity;
     private int occupied;
 
     public Event() {}
 
     public Event(int idCreator, String name, int idType, String place,
-                 String time, String date, int capacity, byte[] image){
+                 String time, String date, int capacity, String imageLink){
         this.idCreator = idCreator;
         this.name = name;
         this.idType = idType;
@@ -23,7 +23,7 @@ public class Event {
         this.time = time;
         this.date = date;
         this.capacity = capacity;
-        this.image = image;
+        this.imageLink = imageLink;
     }
 
     public Event(int idCreator, String name, int idType, String place,
@@ -35,12 +35,12 @@ public class Event {
         this.time = time;
         this.date = date;
         this.capacity = capacity;
-        this.image = image;
+        this.imageLink = imageLink;
     }
 
 
     public Event(int idEvent, int idCreator, String name, int idType, String place, String time,
-                 String date, byte[] image, int capacity, int occupied) {
+                 String date, String imageLink, int capacity, int occupied) {
         this.idEvent = idEvent;
         this.idCreator = idCreator;
         this.name = name;
@@ -48,7 +48,7 @@ public class Event {
         this.place = place;
         this.time = time;
         this.date = date;
-        this.image = image;
+        this.imageLink = imageLink;
         this.capacity = capacity;
         this.occupied = occupied;
     }
@@ -109,12 +109,12 @@ public class Event {
         this.date = date;
     }
 
-    public byte[] getImage() {
-        return image;
+    public String getImage() {
+        return imageLink;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setImage(String imageLink) {
+        this.imageLink = imageLink;
     }
 
     public int getCapacity() {
@@ -143,7 +143,7 @@ public class Event {
                 ", place='" + place + '\'' +
                 ", time='" + time + '\'' +
                 ", date='" + date + '\'' +
-                ", imageUrl='" + image + '\'' +
+                ", imageUrl='" + imageLink + '\'' +
                 ", capacity=" + capacity +
                 ", occupied=" + occupied +
                 '}';
