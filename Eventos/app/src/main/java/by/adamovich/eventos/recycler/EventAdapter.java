@@ -76,7 +76,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                     holder.requestButton.setText("Запросить");
                     holder.requestButton.setEnabled(true);
                 }
-                else if(DataManager.psHandler.isRequestedByUser(DataManager.user.getIdUser(), event.getIdEvent())){
+                if(DataManager.psHandler.isRequestedByUser(DataManager.user.getIdUser(), event.getIdEvent())){
                     holder.requestButton.setBackgroundColor(Color.GRAY);
                     holder.requestButton.setText("Запрошено");
                     holder.requestButton.setEnabled(false);

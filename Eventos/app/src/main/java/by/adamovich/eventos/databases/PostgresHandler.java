@@ -311,4 +311,79 @@ public class PostgresHandler {
         }
         return user;
     }
+
+    public void updateRequest(Request request){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE requests SET isAccepted = ?, isStandby = ? WHERE idRequest = ?");
+            ps.setBoolean(1, request.isAccepted());
+            ps.setBoolean(2, request.isStandby());
+            ps.setInt(3, request.getIdRequest());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ОБНОВЛЕНИЯ ЗАПРОСА: ", e.getMessage());
+        }
+    }
+
+    public void incrementOccupied(Event event){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
+            ps.setInt(1, event.getOccupied() + 1);
+            ps.setInt(2, event.getIdEvent());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ИНКРЕМЕНТА ИВЕНТА: ", e.getMessage());
+        }
+    }
+
+    public void decrementOccupied(Event event){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
+            ps.setInt(1, event.getOccupied() - 1);
+            ps.setInt(2, event.getIdEvent());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДИКРЕМЕНТА ИВЕНТА: ", e.getMessage());
+        }
+    }
+
+    public List<Request> getRequestsToUser(User user){
+        String sql = String.format("SELECT idRequest, idSender, R.idEvent, isStandby, isAccepted FROM Events\n" +
+                "    INNER JOIN Requests R on Events.idEvent = R.idEvent\n" +
+                "    INNER JOIN Users U on U.idUser = Events.idCreator\n" +
+                "    WHERE idCreator = %d", user.getIdUser());
+        List<Request> requests = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                requests.add(new Request(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5)));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ЗАПРОСОВ ОПРЕДЕЛЕННОГО ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
+        return requests;
+    }
+
+    public List<Request> getRequestsFromUser(User user){
+        String sql = String.format("SELECT idRequest, idSender, R.idEvent, isStandby, isAccepted FROM Events\n" +
+                "    INNER JOIN Requests R on Events.idEvent = R.idEvent\n" +
+                "    INNER JOIN Users U on U.idUser = Events.idCreator\n" +
+                "    WHERE idSender = %d", user.getIdUser());
+        List<Request> requests = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                requests.add(new Request(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5)));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ЗАПРОСОВ ОПРЕДЕЛЕННОГО ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
+        return requests;
+    }
 }

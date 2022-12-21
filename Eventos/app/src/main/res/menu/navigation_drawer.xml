@@ -24,6 +24,12 @@
                 android:checkable="true"
                 android:enabled="true"/>
             <item
+                android:id="@+id/checkMyRequestsItem"
+                android:icon="@drawable/ic_baseline_message_24"
+                android:title="Мои Запросы"
+                android:checkable="true"
+                android:enabled="true"/>
+            <item
                 android:id="@+id/exitItem"
                 android:icon="@drawable/ic_baseline_logout_24"
                 android:title="Выйти"

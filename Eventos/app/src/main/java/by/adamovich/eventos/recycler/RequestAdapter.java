@@ -4,28 +4,21 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 import by.adamovich.eventos.R;
 import by.adamovich.eventos.models.DataManager;
+import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Request;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
@@ -68,10 +61,18 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         }).start();
 
         holder.addButton.setOnClickListener((v) -> {
-            addSenderBtn(holder);
+            if (holder.addButton.getText().toString().equals("Добавлен")){
+                Toast.makeText(context, "Уже добавлен", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            addSenderBtn(holder, position);
         });
         holder.rejectButton.setOnClickListener((v) -> {
-            rejectSenderBtn(holder);
+            if (holder.rejectButton.getText().toString().equals("Отказано")){
+                Toast.makeText(context, "Уже отказано", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            rejectSenderBtn(holder, position);
         });
     }
 
@@ -81,7 +82,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // final..
         final TextView eventName, senderNick;
         final Button addButton, rejectButton;
 
@@ -95,8 +95,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         }
     }
 
-    public void addSenderBtn(RequestAdapter.ViewHolder holder){
-        
+    public void addSenderBtn(RequestAdapter.ViewHolder holder, int position){
+        Request request = requests.get(position);
+        request.setAccepted(true);
+        request.setStandby(false);
+        new Thread(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                DataManager.psHandler.updateRequest(request);
+                DataManager.psHandler.incrementOccupied(DataManager.psHandler.getEventById(request.getIdEvent()));
+            });
+        }).start();
 
         holder.addButton.setBackgroundColor(Color.GREEN);
         holder.rejectButton.setBackgroundColor(Color.WHITE);
@@ -104,8 +113,17 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         holder.rejectButton.setText("Отказать");
     }
 
-    public void rejectSenderBtn(RequestAdapter.ViewHolder holder){
-
+    public void rejectSenderBtn(RequestAdapter.ViewHolder holder, int position){
+        Request request = requests.get(position);
+        request.setAccepted(false);
+        request.setStandby(true);
+        new Thread(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                DataManager.psHandler.updateRequest(request);
+                DataManager.psHandler.decrementOccupied(DataManager.psHandler.getEventById(request.getIdEvent()));
+            });
+        }).start();
 
         holder.rejectButton.setBackgroundColor(Color.RED);
         holder.addButton.setBackgroundColor(Color.WHITE);

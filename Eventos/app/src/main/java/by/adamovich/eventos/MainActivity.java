@@ -92,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(reqIntent);
                     drawerLayout.closeDrawers();
                     break;
+                case R.id.checkMyRequestsItem:
+                    Intent myReqIntent = new Intent(this, MyRequestsActivity.class);
+                    startActivity(myReqIntent);
+                    drawerLayout.closeDrawers();
+                    break;
                 case R.id.saveInfoItem:
                     ArrayList<User> exportList = new ArrayList<>();
                     exportList.add(DataManager.user);

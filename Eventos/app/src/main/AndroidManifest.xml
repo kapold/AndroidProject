@@ -27,6 +27,9 @@
             android:name=".RequestsActivity"
             android:exported="true"/>
         <activity
+            android:name=".MyRequestsActivity"
+            android:exported="true"/>
+        <activity
             android:name=".AddNoteActivity"
             android:exported="true"/>
         <activity
