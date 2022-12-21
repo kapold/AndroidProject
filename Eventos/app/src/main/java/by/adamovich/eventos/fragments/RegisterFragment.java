@@ -55,12 +55,8 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view =  inflater.inflate(R.layout.fragment_register, container, false);
         mainActivity = (StartActivity) getActivity();
-        // Шрифты
-        Typeface robotoBlack = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Black.ttf");
         registerTV = view.findViewById(R.id.registerTV);
         alreadyRegisteredTV = view.findViewById(R.id.alreadyRegTV);
-        registerTV.setTypeface(robotoBlack);
-        alreadyRegisteredTV.setTypeface(robotoBlack);
         // Кнопка регистрации
         regBtn = view.findViewById(R.id.registerBtn);
         authBtn = view.findViewById(R.id.authBtnFromReg);

@@ -59,12 +59,8 @@ public class AuthFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_auth, container, false);
         startActivity = (StartActivity) getActivity();
-        // Шрифты
-        Typeface robotoBlack = Typeface.createFromAsset(context.getAssets(), "font/Roboto-Black.ttf");
         logInTV = view.findViewById(R.id.logInTV);
         notRegisteredTV = view.findViewById(R.id.notRegTV);
-        logInTV.setTypeface(robotoBlack);
-        notRegisteredTV.setTypeface(robotoBlack);
         // Кнопки
         authBtn = view.findViewById(R.id.logInBtn);
         regBtn = view.findViewById(R.id.regBtnFromAuth);

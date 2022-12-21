@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ThemedSpinnerAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,9 +25,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
+import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -57,7 +63,7 @@ public class AddEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-        setTitle("New Event");
+        setTitle("Новое событие");
         eventTime = "";
         eventDate = "";
         imageView = findViewById(R.id.eventImage);
@@ -72,7 +78,9 @@ public class AddEventActivity extends AppCompatActivity {
         // Date picker
         pickDateButton = findViewById(R.id.chooseDateBtn);
         MaterialDatePicker.Builder materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setTitleText("Выберите дату");
+        materialDateBuilder.setTitleText("Выберите дату").setCalendarConstraints(new CalendarConstraints.Builder()
+                .setStart(MaterialDatePicker.todayInUtcMilliseconds())
+                .build());
         final MaterialDatePicker materialDatePicker = materialDateBuilder.build();
 
         pickDateButton.setOnClickListener(v -> {
@@ -159,7 +167,10 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         filePath = getRealPathFromUri(data.getData(), AddEventActivity.this);
-        imageView.setImageURI(data.getData());
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
+        Glide.with(this).load(data.getData()).apply(requestOptions).into(imageView);
 
         // get cloudinary
         new Thread(() -> {

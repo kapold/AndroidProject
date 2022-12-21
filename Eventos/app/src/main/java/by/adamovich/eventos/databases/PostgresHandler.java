@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Request;
 import by.adamovich.eventos.models.Type;
 import by.adamovich.eventos.models.User;
 
@@ -165,6 +166,21 @@ public class PostgresHandler {
         }
     }
 
+    public void addRequest(Request request){
+        try{
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO requests (idSender, idEvent, isStandby, isAccepted) \n" +
+                    " VALUES (?, ?, ?, ?)");
+            ps.setInt(1, request.getIdSender());
+            ps.setInt(2, request.getIdEvent());
+            ps.setBoolean(3, request.isStandby());
+            ps.setBoolean(4, request.isStandby());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДОБАВЛЕНЯ ЗАПРОСА: ", e.getMessage());
+        }
+    }
+
     public List<Event> getEvents(){
         String sql = "SELECT * FROM events";
         List<Event> events = new ArrayList<>();
@@ -174,13 +190,57 @@ public class PostgresHandler {
 
             while(rs.next())
                 events.add(new Event(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
-                        rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8),
+                        rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(5),
                         rs.getInt(9), rs.getInt(10)));
         }
         catch (SQLException e) {
             Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА СОБЫТИЙ: ", e.getMessage());
         }
         return events;
+    }
+
+    public List<Request> getRequests(){
+        String sql = "SELECT * FROM requests";
+        List<Request> requests = new ArrayList<>();
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+
+            while(rs.next())
+                requests.add(new Request(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getBoolean(4), rs.getBoolean(5)));
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ЗАПРОСОВ: ", e.getMessage());
+        }
+        return requests;
+    }
+
+    public boolean isRequestedByUser(int idUser, int idEvent){
+        String sql = String.format("SELECT * FROM requests WHERE idSender = %d AND idEvent = %d", idUser, idEvent);
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next())
+                return true;
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isMineEvent(int idUser, int idEvent){
+        String sql = String.format("SELECT * FROM events WHERE idCreator = %d AND idEvent = %d", idUser, idEvent);
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next())
+                return true;
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
+        }
+        return false;
     }
 
     public String getTypeById(int id){
@@ -211,5 +271,44 @@ public class PostgresHandler {
             Log.d("ОШИБКА ПОИСКА ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
         }
         return nick;
+    }
+
+    public Event getEventById(int idEvent){
+        String sql = String.format("SELECT * FROM events WHERE idEvent = %d", idEvent);
+        Event event = null;
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                event = new Event(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4),
+                        rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(5),
+                        rs.getInt(9), rs.getInt(10));
+            }
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА СОБЫТИЯ: ", e.getMessage());
+        }
+        return event;
+    }
+
+    public User getUserById(int idUser){
+        String sql = String.format("SELECT * FROM users WHERE idUser = %d", idUser);
+        User user = null;
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next()) {
+                user = new User(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6));
+            }
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
+        return user;
     }
 }

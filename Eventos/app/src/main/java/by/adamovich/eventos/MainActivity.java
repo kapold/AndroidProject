@@ -7,7 +7,6 @@ import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -30,12 +29,10 @@ import java.util.Objects;
 import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.databases.SharedPreferencesHelper;
 import by.adamovich.eventos.databases.XmlSerialization;
-import by.adamovich.eventos.databinding.ActivityMainBinding;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.User;
 import by.adamovich.eventos.recycler.EventAdapter;
-import kotlin.LateinitKt;
 
 public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
@@ -45,14 +42,12 @@ public class MainActivity extends AppCompatActivity {
     ShimmerFrameLayout shimmerFrameLayout;
     TextInputLayout searchTIL;
     EditText searchET;
-    ActivityMainBinding binding;
+    CharSequence searchRequest = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+        setContentView(R.layout.activity_main);
 
         // Shimmer
         shimmerFrameLayout = findViewById(R.id.shimmerLayout);
@@ -67,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchEvent(s);
+                searchRequest = s;
             }
         });
 
@@ -93,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
                     drawerLayout.closeDrawers();
                     break;
                 case R.id.checkRequestsItem:
-                    Toast.makeText(this, "Пака шо нет, ждем апдейт!", Toast.LENGTH_SHORT).show();
+                    Intent reqIntent = new Intent(this, RequestsActivity.class);
+                    startActivity(reqIntent);
+                    drawerLayout.closeDrawers();
                     break;
                 case R.id.saveInfoItem:
                     ArrayList<User> exportList = new ArrayList<>();
@@ -139,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
         reloadEventRecycler();
     }
 
@@ -171,13 +168,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void searchEvent(CharSequence searchText){
+    public void searchEvent(View view){
         try{
             new Thread(() -> {
                 List<Event> eventsList = DataManager.psHandler.getEvents();
                 List<Event> resultList = new ArrayList<>();
                 for (Event e: eventsList)
-                    if (e.getName().contains(searchText))
+                    if (e.getName().contains(searchRequest))
                         resultList.add(e);
 
                 EventAdapter eventAdapter = new EventAdapter(this, resultList);

@@ -14,6 +14,14 @@ public class Request {
         this.isAccepted = isAccepted;
     }
 
+    public Request(int idRequest, int idSender, int idEvent, boolean isStandby, boolean isAccepted){
+        this.idRequest = idRequest;
+        this.idSender = idSender;
+        this.idEvent = idEvent;
+        this.isStandby = isStandby;
+        this.isAccepted = isAccepted;
+    }
+
     public int getIdRequest() {
         return idRequest;
     }

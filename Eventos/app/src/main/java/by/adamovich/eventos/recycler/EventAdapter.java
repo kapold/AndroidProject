@@ -1,14 +1,12 @@
 package by.adamovich.eventos.recycler;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.contentcapture.DataRemovalRequest;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,20 +14,22 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import by.adamovich.eventos.R;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Request;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private final LayoutInflater inflater;
     private final List<Event> events;
-    private final Context context;
+    public Context context;
 
     public EventAdapter(Context context, List<Event> events) {
         this.events = events;
@@ -54,20 +54,39 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             handler.post(() -> {
                 holder.typeView.setText(DataManager.psHandler.getTypeById(event.getIdType()));
                 holder.creatorView.setText(DataManager.psHandler.getNameById(event.getIdCreator()));
+
+                holder.titleView.setText(event.getName());
+                holder.placeView.setText(event.getPlace());
+                holder.timeView.setText(event.getTime());
+                holder.dateView.setText(event.getDate());
+                holder.peopleView.setText(String.format("%s/%s", event.getOccupied(), event.getCapacity()));
+
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
+                Glide.with(context)
+                        .load(event.getImage())
+                        .apply(requestOptions)
+                        .placeholder(R.drawable.loading_spinner)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .into(holder.eventImage);
+
+                if (!DataManager.psHandler.isMineEvent(DataManager.user.getIdUser(), event.getIdEvent())){
+                    holder.requestButton.setVisibility(View.VISIBLE);
+                    holder.requestButton.setBackgroundColor(Color.parseColor("#e52b50"));
+                    holder.requestButton.setText("Запросить");
+                    holder.requestButton.setEnabled(true);
+                }
+                else if(DataManager.psHandler.isRequestedByUser(DataManager.user.getIdUser(), event.getIdEvent())){
+                    holder.requestButton.setBackgroundColor(Color.GRAY);
+                    holder.requestButton.setText("Запрошено");
+                    holder.requestButton.setEnabled(false);
+                }
             });
         }).start();
-        holder.titleView.setText(event.getName());
-        holder.placeView.setText(event.getPlace());
-        holder.timeView.setText(event.getTime());
-        holder.dateView.setText(event.getDate());
-        holder.peopleView.setText(String.format("%s/%s", event.getOccupied(), event.getCapacity()));
-        holder.requestButton.setEnabled(true);
 
-        Picasso.get()
-                .load(event.getImage())
-                .placeholder(context.getResources().getDrawable(R.drawable.ic_launcher_foreground)) // it will show placeholder image when url is not valid.
-                .networkPolicy(NetworkPolicy.OFFLINE) // for caching the image url in case phone is offline
-                .into(holder.eventImage);
+        holder.requestButton.setOnClickListener((v) -> {
+            requestItemBtn(holder, position);
+        });
     }
 
     // возвращает количество объектов в списке.
@@ -84,7 +103,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
 
         ViewHolder(View itemView){
             super(itemView);
-            eventImage = itemView.findViewById(R.id.eventImage);
+            eventImage = itemView.findViewById(R.id.eventImageMain);
             titleView = itemView.findViewById(R.id.eventTitle);
             typeView = itemView.findViewById(R.id.eventType);
             placeView = itemView.findViewById(R.id.eventPlace);
@@ -94,5 +113,30 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             peopleView = itemView.findViewById(R.id.eventPeople);
             requestButton = itemView.findViewById(R.id.reqBtn);
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return Long.valueOf(position);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    public void requestItemBtn(ViewHolder holder, int position){
+        Event event = events.get(position);
+        Request request = new Request(DataManager.user.getIdUser(), event.getIdEvent(), false, false);
+        new Thread(() -> {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
+                DataManager.psHandler.addRequest(request);
+            });
+        }).start();
+
+        holder.requestButton.setBackgroundColor(Color.GRAY);
+        holder.requestButton.setText("Запрошено");
+        holder.requestButton.setEnabled(false);
     }
 }

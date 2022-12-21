@@ -19,10 +19,10 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchTIL"
-                android:layout_width="360dp"
+                android:layout_width="290dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginLeft="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:startIconDrawable="@drawable/ic_baseline_search_24"
@@ -77,6 +77,19 @@
                     <include layout="@layout/shimmer_layout" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:onClick="searchEvent"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/round_corner"
+                android:layout_marginLeft="10dp"
+                android:padding="1dp"
+                android:layout_marginTop="13dp"
+                app:layout_constraintStart_toEndOf="@+id/searchTIL"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_baseline_search_24" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
