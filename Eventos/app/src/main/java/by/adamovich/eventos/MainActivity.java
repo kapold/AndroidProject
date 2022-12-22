@@ -17,6 +17,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.navigation.NavigationView;
@@ -131,19 +132,21 @@ public class MainActivity extends AppCompatActivity {
         // Recycler
         eventRecycler = findViewById(R.id.eventsRecycler);
         reloadEventRecycler();
+
+        // Refresh
+        refreshLayout = findViewById(R.id.refreshLayout);
+        refreshLayout.setOnRefreshListener(() -> {
+            reloadEventRecycler();
+            refreshLayout.setRefreshing(false);
+        });
     }
+    SwipeRefreshLayout refreshLayout;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        reloadEventRecycler();
     }
 
     public void reloadEventRecycler(){

@@ -26,7 +26,7 @@
 
         <TextView
             android:id="@+id/eventSenderR"
-            android:paddingBottom="20dp"
+            android:paddingBottom="24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/white"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="4dp"
             android:text="Отказать"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addSenderBtn" />

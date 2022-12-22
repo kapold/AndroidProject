@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -37,14 +39,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         this.context = context;
     }
 
-    // возвращает объект ViewHolder, который будет хранить данные по одному объекту Event.
     @Override
     public EventAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.event_item, parent, false);
         return new ViewHolder(view);
     }
 
-    // выполняет привязку объекта ViewHolder к объекту Event по определенной позиции.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Event event = events.get(position);
@@ -89,13 +89,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         });
     }
 
-    // возвращает количество объектов в списке.
     @Override
     public int getItemCount() {
         return events.size();
     }
 
-    // определение переменных
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView eventImage;
         final TextView titleView, typeView, placeView, timeView, dateView, creatorView, peopleView;

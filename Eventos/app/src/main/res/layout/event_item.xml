@@ -85,7 +85,7 @@
 
         <TextView
             android:id="@+id/eventTitle"
-            android:layout_width="360dp"
+            android:layout_width="340dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:textSize="24dp"

@@ -1,9 +1,7 @@
 package by.adamovich.eventos.databases;
 
-import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
