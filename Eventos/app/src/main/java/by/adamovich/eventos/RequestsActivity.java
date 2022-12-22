@@ -46,6 +46,8 @@ public class RequestsActivity extends AppCompatActivity {
         try{
             new Thread(() -> {
                 List<Request> resultList = DataManager.psHandler.getRequestsToUser(DataManager.user);
+                if (resultList == null)
+                    return;
                 RequestAdapter requestAdapter = new RequestAdapter(this, resultList);
 
                 Handler handler = new Handler(Looper.getMainLooper());

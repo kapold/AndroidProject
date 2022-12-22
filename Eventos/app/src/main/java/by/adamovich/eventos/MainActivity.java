@@ -10,6 +10,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -33,6 +36,7 @@ import by.adamovich.eventos.databases.SharedPreferencesHelper;
 import by.adamovich.eventos.databases.XmlSerialization;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
+import by.adamovich.eventos.models.Type;
 import by.adamovich.eventos.models.User;
 import by.adamovich.eventos.recycler.EventAdapter;
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     ShimmerFrameLayout shimmerFrameLayout;
     TextInputLayout searchTIL;
     EditText searchET;
+    SwipeRefreshLayout refreshLayout;
+    AutoCompleteTextView filterACTV;
     CharSequence searchRequest = "";
 
     @Override
@@ -140,8 +146,26 @@ public class MainActivity extends AppCompatActivity {
             reloadEventRecycler();
             refreshLayout.setRefreshing(false);
         });
+
+        // Filter
+        filterACTV = findViewById(R.id.filterACTV);
+        List<String> filterTypes = DataManager.psHandler.getStringTypes();
+        ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, filterTypes);
+        filterACTV.setAdapter(filterAdapter);
+        filterACTV.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int aft ) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                DataManager.filter = s.toString();
+                Toast.makeText(MainActivity.this, DataManager.filter, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    SwipeRefreshLayout refreshLayout;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -163,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(() -> {
                     searchET.setEnabled(false);
                 });
-
 
                 List<Event> resultList = DataManager.psHandler.getEvents();
                 if (resultList == null)
@@ -187,17 +210,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void searchEvent(View view){
+    public void searchEventBtn(View view){
+        searchEvent();
+    }
+
+    private void searchEvent(){
         try{
             new Thread(() -> {
+                if (searchRequest == "" && DataManager.filter.equals("Все"))
+                    return;
+
                 List<Event> eventsList = DataManager.psHandler.getEvents();
+                List<Type> typesList = DataManager.psHandler.getTypes();
                 List<Event> resultList = new ArrayList<>();
                 for (Event e: eventsList)
-                    if (e.getName().contains(searchRequest))
+                    if (e.getName().toUpperCase().contains(searchRequest.toString().toUpperCase()) &&
+                            (getTypeByEventId(e.getIdType(), typesList).contains(DataManager.filter) ||
+                                    DataManager.filter.equals("Все")))
                         resultList.add(e);
 
                 EventAdapter eventAdapter = new EventAdapter(this, resultList,
-                        DataManager.psHandler.getTypes(), DataManager.psHandler.getUsers(), DataManager.psHandler.getRequests());
+                        typesList, DataManager.psHandler.getUsers(), DataManager.psHandler.getRequests());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
                     eventRecycler.setAdapter(eventAdapter);
@@ -208,5 +241,21 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Произошла ошибка поиска", Toast.LENGTH_SHORT).show();
             Log.d("searchEvent(): ", ex.getMessage());
         }
+    }
+
+    public void clearFilter(View view){
+        DataManager.filter = "Все";
+        filterACTV.setText("Все");
+        List<String> filterTypes = DataManager.psHandler.getStringTypes();
+        ArrayAdapter<String> filterAdapter = new ArrayAdapter<>(this, R.layout.dropdown_item, filterTypes);
+        filterACTV.setAdapter(filterAdapter);
+        searchEvent();
+    }
+
+    private String getTypeByEventId(int idEvent, List<Type> types){
+        for (Type t: types)
+            if (t.getIdType() == idEvent)
+                return t.getType();
+        return null;
     }
 }
