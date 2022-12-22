@@ -27,16 +27,26 @@ import by.adamovich.eventos.R;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Request;
+import by.adamovich.eventos.models.Type;
+import by.adamovich.eventos.models.User;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private final LayoutInflater inflater;
-    private final List<Event> events;
     public Context context;
 
-    public EventAdapter(Context context, List<Event> events) {
-        this.events = events;
+    private final List<Event> events;
+    private final List<Type> types;
+    private final List<User> users;
+    private final List<Request> requests;
+
+    public EventAdapter(Context context, List<Event> events, List<Type> types, List<User> users, List<Request> requests) {
         this.inflater = LayoutInflater.from(context);
         this.context = context;
+
+        this.events = events;
+        this.types = types;
+        this.users = users;
+        this.requests = requests;
     }
 
     @Override
@@ -52,8 +62,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         new Thread(() -> {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
-                holder.typeView.setText(DataManager.psHandler.getTypeById(event.getIdType()));
-                holder.creatorView.setText(DataManager.psHandler.getNameById(event.getIdCreator()));
+                holder.typeView.setText(getTypeByEventId(event.getIdType()));
+                holder.creatorView.setText(getCreatorNicknameById(event.getIdCreator()));
 
                 holder.titleView.setText(event.getName());
                 holder.placeView.setText(event.getPlace());
@@ -70,15 +80,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(holder.eventImage);
 
-                if (!DataManager.psHandler.isMineEvent(DataManager.user.getIdUser(), event.getIdEvent())){
+                if (!isMineEvent(DataManager.user.getIdUser(), event.getIdEvent())){
                     holder.requestButton.setVisibility(View.VISIBLE);
                     holder.requestButton.setBackgroundColor(Color.parseColor("#e52b50"));
                     holder.requestButton.setText("Запросить");
                     holder.requestButton.setEnabled(true);
                 }
-                if(DataManager.psHandler.isRequestedByUser(DataManager.user.getIdUser(), event.getIdEvent())){
+                if (isRequestedByUser(DataManager.user.getIdUser(), event.getIdEvent())){
                     holder.requestButton.setBackgroundColor(Color.GRAY);
                     holder.requestButton.setText("Запрошено");
+                    holder.requestButton.setEnabled(false);
+                }
+                if (isFullyOccupied(event)){
+                    holder.requestButton.setVisibility(View.INVISIBLE);
                     holder.requestButton.setEnabled(false);
                 }
             });
@@ -136,5 +150,40 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
         holder.requestButton.setBackgroundColor(Color.GRAY);
         holder.requestButton.setText("Запрошено");
         holder.requestButton.setEnabled(false);
+    }
+
+    // SPEED :)
+    private String getTypeByEventId(int idEvent){
+        for (Type t: types)
+            if (t.getIdType() == idEvent)
+                return t.getType();
+        return null;
+    }
+
+    private String getCreatorNicknameById(int idEvent){
+        for (User u: users)
+            if (u.getIdUser() == idEvent)
+                return u.getName();
+        return null;
+    }
+
+    private boolean isMineEvent(int idUser, int idEvent){
+        for (Event e: events)
+            if (e.getIdCreator() == idUser && e.getIdEvent() == idEvent)
+                return true;
+        return false;
+    }
+
+    private boolean isRequestedByUser(int idUser, int idEvent){
+        for (Request r: requests)
+            if (r.getIdSender() == idUser && r.getIdEvent() == idEvent)
+                return true;
+        return false;
+    }
+
+    private boolean isFullyOccupied(Event event){
+        if (event.getOccupied() >= event.getCapacity())
+            return true;
+        return false;
     }
 }

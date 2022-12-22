@@ -54,8 +54,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                     holder.addButton.setText("Добавлен");
                 }
                 else if (request.isStandby()){
-                    holder.addButton.setBackgroundColor(Color.RED);
-                    holder.addButton.setText("Отказано");
+                    holder.rejectButton.setBackgroundColor(Color.RED);
+                    holder.rejectButton.setText("Отказано");
                 }
             });
         }).start();
@@ -121,7 +121,9 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
                 DataManager.psHandler.updateRequest(request);
-                DataManager.psHandler.decrementOccupied(DataManager.psHandler.getEventById(request.getIdEvent()));
+                // TODO: check for +
+                if (request.isAccepted())
+                    DataManager.psHandler.decrementOccupied(DataManager.psHandler.getEventById(request.getIdEvent()));
             });
         }).start();
 

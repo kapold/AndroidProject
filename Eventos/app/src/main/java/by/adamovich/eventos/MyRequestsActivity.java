@@ -1,5 +1,6 @@
 package by.adamovich.eventos;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -9,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
 
@@ -19,12 +21,20 @@ import by.adamovich.eventos.recycler.RequestAdapter;
 
 public class MyRequestsActivity extends AppCompatActivity {
     RecyclerView requestsRecycler;
+    SwipeRefreshLayout refreshMyRequests;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_requests);
         setTitle("Запросы");
+
+        refreshMyRequests = findViewById(R.id.refreshMyRequests);
+        refreshMyRequests.setOnRefreshListener(() -> {
+            reloadRequestsRecycler();
+            refreshMyRequests.setRefreshing(false);
+        });
 
         requestsRecycler = findViewById(R.id.myRequestsRecycler);
         reloadRequestsRecycler();

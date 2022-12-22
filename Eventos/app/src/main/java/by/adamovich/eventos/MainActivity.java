@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -149,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        reloadEventRecycler();
+    }
+
     public void reloadEventRecycler(){
         try{
             new Thread(() -> {
@@ -157,8 +164,12 @@ public class MainActivity extends AppCompatActivity {
                     searchET.setEnabled(false);
                 });
 
+
                 List<Event> resultList = DataManager.psHandler.getEvents();
-                EventAdapter eventAdapter = new EventAdapter(this, resultList);
+                if (resultList == null)
+                    return;
+                EventAdapter eventAdapter = new EventAdapter(this, resultList,
+                        DataManager.psHandler.getTypes(), DataManager.psHandler.getUsers(), DataManager.psHandler.getRequests());
 
                 handler.post(() -> {
                     shimmerFrameLayout.hideShimmer();
@@ -185,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
                     if (e.getName().contains(searchRequest))
                         resultList.add(e);
 
-                EventAdapter eventAdapter = new EventAdapter(this, resultList);
+                EventAdapter eventAdapter = new EventAdapter(this, resultList,
+                        DataManager.psHandler.getTypes(), DataManager.psHandler.getUsers(), DataManager.psHandler.getRequests());
                 Handler handler = new Handler(Looper.getMainLooper());
                 handler.post(() -> {
                     eventRecycler.setAdapter(eventAdapter);

@@ -58,6 +58,7 @@ public class PostgresHandler {
         }
     }
 
+    // Get
     public List<User> getUsers(){
         String sql = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
@@ -133,52 +134,6 @@ public class PostgresHandler {
         return types;
     }
 
-    public void addUser(User user){
-        String sql = String.format("INSERT INTO users(nickname, name, surname, password, phoneNumber) \n" +
-                " VALUES ('%s', '%s', '%s', '%s', '%s')", user.getNickname(), user.getName(), user.getSurname(), user.getPassword(), user.getPhoneNumber());
-        try{
-            Statement st = connection.createStatement();
-            st.executeUpdate(sql);
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
-        }
-    }
-
-    public void addEvent(Event event, String imageLink){
-        try{
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO events (idCreator, name, idType, image, place, time, date, capacity)\n" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setInt(1, event.getIdCreator());
-            ps.setString(2, event.getName());
-            ps.setInt(3, event.getIdType());
-            ps.setString(4, imageLink);
-            ps.setString(5, event.getPlace());
-            ps.setString(6, event.getTime());
-            ps.setString(7, event.getDate());
-            ps.setInt(8, event.getCapacity());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ДОБАВЛЕНЯ СОБЫТИЯ: ", e.getMessage());
-        }
-    }
-
-    public void addRequest(Request request){
-        try{
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO requests (idSender, idEvent, isStandby, isAccepted) \n" +
-                    " VALUES (?, ?, ?, ?)");
-            ps.setInt(1, request.getIdSender());
-            ps.setInt(2, request.getIdEvent());
-            ps.setBoolean(3, request.isStandby());
-            ps.setBoolean(4, request.isStandby());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ДОБАВЛЕНЯ ЗАПРОСА: ", e.getMessage());
-        }
-    }
-
     public List<Event> getEvents(){
         String sql = "SELECT * FROM events";
         List<Event> events = new ArrayList<>();
@@ -211,34 +166,6 @@ public class PostgresHandler {
             Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ЗАПРОСОВ: ", e.getMessage());
         }
         return requests;
-    }
-
-    public boolean isRequestedByUser(int idUser, int idEvent){
-        String sql = String.format("SELECT * FROM requests WHERE idSender = %d AND idEvent = %d", idUser, idEvent);
-        try{
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            if(rs.next())
-                return true;
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
-        }
-        return false;
-    }
-
-    public boolean isMineEvent(int idUser, int idEvent){
-        String sql = String.format("SELECT * FROM events WHERE idCreator = %d AND idEvent = %d", idUser, idEvent);
-        try{
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            if(rs.next())
-                return true;
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
-        }
-        return false;
     }
 
     public String getTypeById(int id){
@@ -310,43 +237,6 @@ public class PostgresHandler {
         return user;
     }
 
-    public void updateRequest(Request request){
-        try{
-            PreparedStatement ps = connection.prepareStatement("UPDATE requests SET isAccepted = ?, isStandby = ? WHERE idRequest = ?");
-            ps.setBoolean(1, request.isAccepted());
-            ps.setBoolean(2, request.isStandby());
-            ps.setInt(3, request.getIdRequest());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ОБНОВЛЕНИЯ ЗАПРОСА: ", e.getMessage());
-        }
-    }
-
-    public void incrementOccupied(Event event){
-        try{
-            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
-            ps.setInt(1, event.getOccupied() + 1);
-            ps.setInt(2, event.getIdEvent());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ИНКРЕМЕНТА ИВЕНТА: ", e.getMessage());
-        }
-    }
-
-    public void decrementOccupied(Event event){
-        try{
-            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
-            ps.setInt(1, event.getOccupied() - 1);
-            ps.setInt(2, event.getIdEvent());
-            ps.executeUpdate();
-        }
-        catch (SQLException e) {
-            Log.d("ОШИБКА ДИКРЕМЕНТА ИВЕНТА: ", e.getMessage());
-        }
-    }
-
     public List<Request> getRequestsToUser(User user){
         String sql = String.format("SELECT idRequest, idSender, R.idEvent, isStandby, isAccepted FROM Events\n" +
                 "    INNER JOIN Requests R on Events.idEvent = R.idEvent\n" +
@@ -383,5 +273,119 @@ public class PostgresHandler {
             Log.d("ОШИБКА ПОЛУЧЕНИЯ СПИСКА ЗАПРОСОВ ОПРЕДЕЛЕННОГО ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
         }
         return requests;
+    }
+
+    // Get Boolean
+    public boolean isRequestedByUser(int idUser, int idEvent){
+        String sql = String.format("SELECT * FROM requests WHERE idSender = %d AND idEvent = %d", idUser, idEvent);
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next())
+                return true;
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
+        }
+        return false;
+    }
+
+    public boolean isMineEvent(int idUser, int idEvent){
+        String sql = String.format("SELECT * FROM events WHERE idCreator = %d AND idEvent = %d", idUser, idEvent);
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            if(rs.next())
+                return true;
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ПОИСКА ЗАПРОСА: ", e.getMessage());
+        }
+        return false;
+    }
+
+    // Add
+    public void addUser(User user){
+        String sql = String.format("INSERT INTO users(nickname, name, surname, password, phoneNumber) \n" +
+                " VALUES ('%s', '%s', '%s', '%s', '%s')", user.getNickname(), user.getName(), user.getSurname(), user.getPassword(), user.getPhoneNumber());
+        try{
+            Statement st = connection.createStatement();
+            st.executeUpdate(sql);
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА РЕГИСТРАЦИИ ПОЛЬЗОВАТЕЛЯ: ", e.getMessage());
+        }
+    }
+
+    public void addEvent(Event event, String imageLink){
+        try{
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO events (idCreator, name, idType, image, place, time, date, capacity)\n" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setInt(1, event.getIdCreator());
+            ps.setString(2, event.getName());
+            ps.setInt(3, event.getIdType());
+            ps.setString(4, imageLink);
+            ps.setString(5, event.getPlace());
+            ps.setString(6, event.getTime());
+            ps.setString(7, event.getDate());
+            ps.setInt(8, event.getCapacity());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДОБАВЛЕНЯ СОБЫТИЯ: ", e.getMessage());
+        }
+    }
+
+    public void addRequest(Request request){
+        try{
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO requests (idSender, idEvent, isStandby, isAccepted) \n" +
+                    " VALUES (?, ?, ?, ?)");
+            ps.setInt(1, request.getIdSender());
+            ps.setInt(2, request.getIdEvent());
+            ps.setBoolean(3, request.isStandby());
+            ps.setBoolean(4, request.isStandby());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДОБАВЛЕНЯ ЗАПРОСА: ", e.getMessage());
+        }
+    }
+
+    // Update
+    public void updateRequest(Request request){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE requests SET isAccepted = ?, isStandby = ? WHERE idRequest = ?");
+            ps.setBoolean(1, request.isAccepted());
+            ps.setBoolean(2, request.isStandby());
+            ps.setInt(3, request.getIdRequest());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ОБНОВЛЕНИЯ ЗАПРОСА: ", e.getMessage());
+        }
+    }
+
+    public void incrementOccupied(Event event){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
+            ps.setInt(1, event.getOccupied() + 1);
+            ps.setInt(2, event.getIdEvent());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ИНКРЕМЕНТА ИВЕНТА: ", e.getMessage());
+        }
+    }
+
+    public void decrementOccupied(Event event){
+        try{
+            PreparedStatement ps = connection.prepareStatement("UPDATE events SET occupied = ? WHERE idEvent = ?");
+            ps.setInt(1, event.getOccupied() - 1);
+            ps.setInt(2, event.getIdEvent());
+            ps.executeUpdate();
+        }
+        catch (SQLException e) {
+            Log.d("ОШИБКА ДИКРЕМЕНТА ИВЕНТА: ", e.getMessage());
+        }
     }
 }
