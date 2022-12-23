@@ -9,8 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -62,6 +65,10 @@ public class AddEventActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true);
 
         setTitle("Новое событие");
         eventTime = "";
@@ -109,7 +116,8 @@ public class AddEventActivity extends AppCompatActivity {
         });
 
         // Image picker
-        configCloudinary();
+        if (!DataManager.isMediaManagerInitialized)
+            configCloudinary();
         imageView.setOnClickListener(view -> {
             requestPermission();
         });
@@ -126,11 +134,22 @@ public class AddEventActivity extends AppCompatActivity {
     String cloudinaryImagePath = "";
     Map config = new HashMap();
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void configCloudinary() {
         config.put("cloud_name", "dft0czskt");
         config.put("api_key", "644257398862186");
         config.put("api_secret", "PVjM2Ls_M2_q0dLS8u_NlG7HZJ0");
         MediaManager.init(AddEventActivity.this, config);
+        DataManager.isMediaManagerInitialized = true;
     }
 
     private void requestPermission(){

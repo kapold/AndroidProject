@@ -6,6 +6,7 @@ public class DataManager {
     public static User user;
     public static PostgresHandler psHandler;
     public static String filter = "";
+    public static boolean isMediaManagerInitialized = false;
 
     public static void loadDatabase(){
         if (psHandler == null)

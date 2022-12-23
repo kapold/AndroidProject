@@ -59,7 +59,7 @@ public class ChangeNoteActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 text = s.toString();
-                charactersTV.setText(count + " characters");
+                charactersTV.setText(count + " символов");
             }
         });
 
@@ -84,9 +84,6 @@ public class ChangeNoteActivity extends AppCompatActivity {
         noteToChange.setTitle(title);
         noteToChange.setText(text);
         sqLiteHandler.updateNote(noteToChange.getId(), noteToChange);
-
-        Intent notesIntent = new Intent(this, NotesActivity.class);
-        startActivity(notesIntent);
         this.finish();
     }
 }

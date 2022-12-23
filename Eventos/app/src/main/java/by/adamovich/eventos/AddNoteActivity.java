@@ -62,7 +62,7 @@ public class AddNoteActivity extends AppCompatActivity {
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 text = s.toString();
-                charactersTV.setText(count + " characters");
+                charactersTV.setText(count + " символов");
             }
         });
 
@@ -79,27 +79,18 @@ public class AddNoteActivity extends AppCompatActivity {
         if (title == null || text == null)
             return;
 
-        for (Note n: allNotes)
+        for (Note n: allNotes){
             if (title.equals(n.getTitle())) {
                 isThereSuchNote = true;
                 savedID = n.getId();
             }
-
-        Note note = new Note();
-        note.setDate(dateTV.getText().toString());
-        note.setTitle(title);
-        note.setText(text);
-        note.setCreator(DataManager.user.getIdUser());
-        if (isThereSuchNote){
-            sqLiteHandler.deleteNote(savedID);
-            sqLiteHandler.addNote(note);
-        }
-        else{
-            sqLiteHandler.addNote(note);
         }
 
-        Intent notesIntent = new Intent(this, NotesActivity.class);
-        startActivity(notesIntent);
+        Note note = new Note(savedID, DataManager.user.getIdUser(), title, text, dateTV.getText().toString());
+        if (isThereSuchNote)
+            sqLiteHandler.updateNote(savedID, note);
+        else
+            sqLiteHandler.addNote(note);
         this.finish();
     }
 }

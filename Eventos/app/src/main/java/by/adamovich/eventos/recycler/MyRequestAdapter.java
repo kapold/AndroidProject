@@ -23,10 +23,12 @@ import by.adamovich.eventos.models.Request;
 public class MyRequestAdapter extends RecyclerView.Adapter<MyRequestAdapter.ViewHolder> {
     private final LayoutInflater inflater;
     private final List<Request> requests;
+    private final List<Event> events;
     public Context context;
 
-    public MyRequestAdapter(Context context, List<Request> requests) {
+    public MyRequestAdapter(Context context, List<Request> requests, List<Event> events) {
         this.requests = requests;
+        this.events = events;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -45,7 +47,7 @@ public class MyRequestAdapter extends RecyclerView.Adapter<MyRequestAdapter.View
         new Thread(() -> {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
-                Event event = DataManager.psHandler.getEventById(request.getIdEvent());
+                Event event = getEventById(request.getIdEvent());
                 holder.infoView.setText(event.getName());
                 if (request.isAccepted){
                     holder.resultView.setTextColor(Color.GREEN);
@@ -72,5 +74,12 @@ public class MyRequestAdapter extends RecyclerView.Adapter<MyRequestAdapter.View
             infoView = itemView.findViewById(R.id.myRequestInfo);
             resultView = itemView.findViewById(R.id.myRequestResult);
         }
+    }
+
+    public Event getEventById(int idEvent){
+        for (Event e: events)
+            if (e.getIdEvent() == idEvent)
+                return e;
+        return null;
     }
 }

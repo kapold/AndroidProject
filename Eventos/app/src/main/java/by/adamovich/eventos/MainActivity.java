@@ -162,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 DataManager.filter = s.toString();
-                Toast.makeText(MainActivity.this, DataManager.filter, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -174,11 +173,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        reloadEventRecycler();
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        reloadEventRecycler();
+//    }
 
     public void reloadEventRecycler(){
         try{

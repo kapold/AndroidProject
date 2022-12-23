@@ -163,7 +163,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     private String getCreatorNicknameById(int idEvent){
         for (User u: users)
             if (u.getIdUser() == idEvent)
-                return u.getName();
+                return u.getNickname();
         return null;
     }
 

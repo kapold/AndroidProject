@@ -20,14 +20,19 @@ import by.adamovich.eventos.R;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Request;
+import by.adamovich.eventos.models.User;
 
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
     private final LayoutInflater inflater;
     private final List<Request> requests;
+    private final List<Event> events;
+    private final List<User> users;
     public Context context;
 
-    public RequestAdapter(Context context, List<Request> requests) {
+    public RequestAdapter(Context context, List<Request> requests, List<User> users, List<Event> events) {
         this.requests = requests;
+        this.events = events;
+        this.users = users;
         this.inflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -46,8 +51,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         new Thread(() -> {
             Handler handler = new Handler(Looper.getMainLooper());
             handler.post(() -> {
-                holder.eventName.setText(DataManager.psHandler.getEventById(request.getIdEvent()).getName());
-                holder.senderNick.setText(DataManager.psHandler.getUserById(request.getIdSender()).getNickname());
+                holder.eventName.setText(getEventById(request.getIdEvent()).getName());
+                holder.senderNick.setText(getUserById(request.getIdSender()).getNickname());
 
                 if (request.isAccepted()){
                     holder.addButton.setBackgroundColor(Color.GREEN);
@@ -131,5 +136,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         holder.addButton.setBackgroundColor(Color.WHITE);
         holder.addButton.setText("Добавить");
         holder.rejectButton.setText("Отказано");
+    }
+
+    private Event getEventById(int idEvent){
+        for (Event e: events)
+            if (e.getIdEvent() == idEvent)
+                return e;
+        return null;
+    }
+
+    private User getUserById(int idSender){
+        for (User u: users)
+            if (u.getIdUser() == idSender)
+                return u;
+        return null;
     }
 }

@@ -47,7 +47,7 @@ public class ItemClickSupport {
         }
     };
 
-    private ItemClickSupport(RecyclerView recyclerView) {
+    public ItemClickSupport(RecyclerView recyclerView) {
         mRecyclerView = recyclerView;
         mRecyclerView.setTag(R.id.item_click_support, this);
         mRecyclerView.addOnChildAttachStateChangeListener(mAttachListener);

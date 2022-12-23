@@ -18,14 +18,14 @@ CREATE TABLE Events
 (
     idEvent SERIAL PRIMARY KEY,
     idCreator INTEGER REFERENCES Users(idUser),
-    name VARCHAR(64),
+    name TEXT,
     idType INTEGER REFERENCES Types(idType),
-    image BYTEA,
+    image TEXT,
     place VARCHAR(64),
     time TEXT,
     date TEXT,
     capacity INTEGER CHECK(capacity > 0),
-    occupied INTEGER CHECK(occupied < capacity) DEFAULT(0)
+    occupied INTEGER CHECK(occupied <= capacity) DEFAULT(0)
 );
 
 CREATE TABLE Requests
@@ -43,5 +43,4 @@ DROP TABLE types;
 DROP TABLE users;
 
 INSERT INTO types (type)
-    VALUES ('День рождения'), ('Копоратив'), ('Собрание'), ('Праздник');
-
+    VALUES ('День рождения'), ('Корпоратив'), ('Собрание'), ('Праздник');
