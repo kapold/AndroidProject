@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.fragments.AuthFragment;
 import by.adamovich.eventos.fragments.RegisterFragment;
 

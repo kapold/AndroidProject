@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import by.adamovich.eventos.R;
+import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Request;
@@ -109,7 +112,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final ImageView eventImage;
+        final ImageView eventImage, bookmarkImage;
         final TextView titleView, typeView, placeView, timeView, dateView, creatorView, peopleView;
         final Button requestButton;
 
@@ -124,6 +127,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> 
             creatorView = itemView.findViewById(R.id.eventCreator);
             peopleView = itemView.findViewById(R.id.eventPeople);
             requestButton = itemView.findViewById(R.id.reqBtn);
+            bookmarkImage = itemView.findViewById(R.id.bookmarkIV);
         }
     }
 

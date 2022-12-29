@@ -39,6 +39,7 @@ import by.adamovich.eventos.models.Event;
 import by.adamovich.eventos.models.Type;
 import by.adamovich.eventos.models.User;
 import by.adamovich.eventos.recycler.EventAdapter;
+import by.adamovich.eventos.recycler.ItemClickSupport;
 
 public class MainActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
@@ -114,11 +115,11 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Данные сохранены", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.loadInfoItem:
-                    List<User> importList;
-                    importList = jsonSerialization.importFromJSON(this);
-                    Toast.makeText(this, "User from Json:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
-                    importList = xmlSerialization.importXml(this);
-                    Toast.makeText(this, "User from Xml:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
+                    //List<User> importList;
+                    //importList = jsonSerialization.importFromJSON(this);
+                    //Toast.makeText(this, "User from Json:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
+                    //importList = xmlSerialization.importXml(this);
+                    //Toast.makeText(this, "User from Xml:\n" + importList.get(0).toString(), Toast.LENGTH_SHORT).show();
                     spHelper.loadPreferences();
                     break;
                 case R.id.notesItem:
@@ -256,5 +257,12 @@ public class MainActivity extends AppCompatActivity {
             if (t.getIdType() == idEvent)
                 return t.getType();
         return null;
+    }
+
+    private boolean isThereInBookmarked(Event event, List<Event> bookmarkList){
+        for (Event e: bookmarkList)
+            if (e.getIdEvent() == event.getIdEvent())
+                return true;
+        return false;
     }
 }

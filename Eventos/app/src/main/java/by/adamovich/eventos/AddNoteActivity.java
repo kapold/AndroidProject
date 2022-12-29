@@ -16,7 +16,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import by.adamovich.eventos.databases.JsonSerialization;
 import by.adamovich.eventos.databases.SQLiteHandler;
+import by.adamovich.eventos.databases.XmlSerialization;
 import by.adamovich.eventos.models.DataManager;
 import by.adamovich.eventos.models.Note;
 
@@ -91,6 +93,13 @@ public class AddNoteActivity extends AppCompatActivity {
             sqLiteHandler.updateNote(savedID, note);
         else
             sqLiteHandler.addNote(note);
+
+        JsonSerialization jsonSerialization = new JsonSerialization("notesInfo.json");
+        XmlSerialization xmlSerialization = new XmlSerialization("notesInfo.xml");
+
+        List<Note> noteList = sqLiteHandler.getNotes();
+        jsonSerialization.exportNotesToJSON(this, noteList);
+        xmlSerialization.exportNotes(this, noteList);
         this.finish();
     }
 }

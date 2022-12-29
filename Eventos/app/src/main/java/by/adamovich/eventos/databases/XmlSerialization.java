@@ -22,6 +22,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import by.adamovich.eventos.models.Note;
 import by.adamovich.eventos.models.User;
 
 public class XmlSerialization implements Serializable {
@@ -63,6 +64,49 @@ public class XmlSerialization implements Serializable {
                 serializer.endTag(null, "user");
             }
             serializer.endTag(null, "userList");
+            serializer.endDocument();
+            serializer.flush();
+
+            fos.close();
+        }
+        catch (Exception ex) {
+            Toast.makeText(context, "Ошибка экспорта XML", Toast.LENGTH_SHORT).show();
+            Log.d("exportXml(): ", ex.getMessage());
+        }
+    }
+
+    public void exportNotes(Context context, List<Note> dataList) {
+        FileOutputStream fos;
+        try {
+            fos = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            XmlSerializer serializer = Xml.newSerializer();
+            serializer.setOutput(fos, "UTF-8");
+            serializer.startDocument(null, Boolean.valueOf(true));
+            serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+
+            serializer.startTag(null, "noteList");
+            for (int j = 0; j < dataList.size(); j++) {
+                serializer.startTag(null, "note");
+
+                serializer.startTag(null, "id");
+                serializer.text(String.valueOf(dataList.get(j).getId()));
+                serializer.endTag(null, "id");
+
+                serializer.startTag(null, "title");
+                serializer.text(dataList.get(j).getTitle());
+                serializer.endTag(null, "title");
+
+                serializer.startTag(null, "text");
+                serializer.text(dataList.get(j).getText());
+                serializer.endTag(null, "text");
+
+                serializer.startTag(null, "date");
+                serializer.text(dataList.get(j).getDate());
+                serializer.endTag(null, "date");
+
+                serializer.endTag(null, "note");
+            }
+            serializer.endTag(null, "noteList");
             serializer.endDocument();
             serializer.flush();
 

@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.List;
 
+import by.adamovich.eventos.models.Note;
 import by.adamovich.eventos.models.User;
 
 public class JsonSerialization implements Serializable {
@@ -26,6 +27,23 @@ public class JsonSerialization implements Serializable {
         Gson gson = new Gson();
         DataItems dataItems = new DataItems();
         dataItems.setUsers(dataList);
+        String jsonString = gson.toJson(dataItems);
+
+        try(FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
+            fileOutputStream.write(jsonString.getBytes());
+            return true;
+        }
+        catch (Exception ex) {
+            Toast.makeText(context, "Ошибка экспорта", Toast.LENGTH_SHORT).show();
+            Log.d("exportToJSON(): ", ex.getMessage());
+        }
+        return false;
+    }
+
+    public boolean exportNotesToJSON(Context context, List<Note> dataList) {
+        Gson gson = new Gson();
+        DataItems dataItems = new DataItems();
+        dataItems.setNotes(dataList);
         String jsonString = gson.toJson(dataItems);
 
         try(FileOutputStream fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)) {
@@ -54,6 +72,21 @@ public class JsonSerialization implements Serializable {
         return null;
     }
 
+    public List<Note> importNotesFromJSON(Context context) {
+        try(FileInputStream fileInputStream = context.openFileInput(fileName);
+            InputStreamReader streamReader = new InputStreamReader(fileInputStream)){
+
+            Gson gson = new Gson();
+            DataItems dataItems = gson.fromJson(streamReader, DataItems.class);
+            return dataItems.getNotes();
+        }
+        catch (IOException ex) {
+            Toast.makeText(context, "Ошибка импорта", Toast.LENGTH_SHORT).show();
+            Log.d("importFromJSON(): ", ex.getMessage());
+        }
+        return null;
+    }
+
     private static class DataItems {
         private List<User> users;
         List<User> getUsers() {
@@ -62,5 +95,9 @@ public class JsonSerialization implements Serializable {
         void setUsers(List<User> users) {
             this.users = users;
         }
+
+        private List<Note> notes;
+        List<Note> getNotes() { return notes; }
+        void setNotes(List<Note> notes) { this.notes = notes; }
     }
 }
